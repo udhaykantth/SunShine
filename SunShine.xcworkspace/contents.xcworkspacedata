@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:SunShine/SunShine.xcodeproj">
+      location = "group:SunShine.xcodeproj">
    </FileRef>
 </Workspace>
