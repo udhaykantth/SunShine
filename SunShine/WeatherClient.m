@@ -7,6 +7,9 @@
 //
 
 #import "WeatherClient.h"
+#import "WeatherJsonParser.h"
+#import "WeatherCondition.h"
+
 #define WeatherURL @""
 
 @interface WeatherClient()
@@ -32,6 +35,7 @@
             id json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
             if (! jsonError) {
                 NSLog(@"json data is %@",json);
+                WeatherJsonParser *parse = [[WeatherJsonParser alloc]initWithWeatherDataFromJSON:(NSDictionary*)json delegate:self];
                 
              }
             else {
@@ -44,5 +48,33 @@
     
     [dataTask resume];
 }
-
+- (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate
+{
+    
+    //TODO:// coordinates has to be dynamic.
+    NSURL *url = [NSURL URLWithString:@"http://api.openweathermap.org/data/2.5/weather?lat=37.785834&lon=-122.406417&units=imperial"];
+    NSURLSessionDataTask *dataTask = [self.session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        if (! error) {
+            NSError *jsonError = nil;
+            id json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
+            if (! jsonError) {
+                NSLog(@"json data is %@",json);
+                WeatherJsonParser* parser = [[WeatherJsonParser alloc]initWithWeatherDataFromJSON:(NSDictionary*)json delegate:self];
+                [parser parseJSON];
+            }
+            else {
+            }
+        }
+        else {
+        }
+        
+    }];
+    
+    [dataTask resume];
+}
+-(void)didFinishParsing:(WeatherCondition *)parsedData
+{
+    NSLog(@"Parsing Done successfully");
+    [self.clientDelegate didFinishFetchJSONDataFromWeatherURL:parsedData];
+}
 @end

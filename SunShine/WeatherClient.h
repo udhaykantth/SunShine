@@ -7,8 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
+#import "WeatherJsonParser.h"
 
-@interface WeatherClient : NSObject
+@protocol WeatherClientDelegate <NSObject>
+
+@required
+-(void)didFinishFetchJSONDataFromWeatherURL:(WeatherCondition*)data;
+
+@end
+
+@interface WeatherClient : NSObject<WeatherJsonParserDelegate>
+@property(nonatomic,weak)id<WeatherClientDelegate> clientDelegate;
 - (void)fetchJSONDataFromWeatherURL:(NSURL *)url;
+- (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate;
+
 
 @end

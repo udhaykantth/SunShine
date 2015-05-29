@@ -8,6 +8,8 @@
 
 #import "AppDelegate.h"
 #import "WeatherListViewController.h"
+#import "WeatherManager.h"
+
 
 @interface AppDelegate ()
 
@@ -18,6 +20,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    ////testing json data
+    WeatherManager *client = [WeatherManager sharedWeatherManager];
+    [client fetchCurrentConditions];
+     
+    
+    //// testing json data
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = [[WeatherListViewController alloc] init];
     self.window.backgroundColor = [UIColor whiteColor];

@@ -7,7 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
+#import "WeatherClient.h"
 
-@interface WeatherManager : NSObject
+
+@interface WeatherManager : NSObject <CLLocationManagerDelegate,WeatherClientDelegate>
++(instancetype)sharedWeatherManager;
+
+@property (nonatomic, strong, readonly) CLLocation *currentLocation;
+
+
+-(void)fetchCurrentConditions;
+
 
 @end
