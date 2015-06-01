@@ -52,7 +52,7 @@
 {
     
     //TODO:// coordinates has to be dynamic.
-    NSURL *url = [NSURL URLWithString:@"http://api.openweathermap.org/data/2.5/weather?lat=37.785834&lon=-122.406417&units=imperial"];
+    NSURL *url = [NSURL URLWithString:@"http://api.openweathermap.org/data/2.5/weather?lat=17.38&lon=78.47&units=metric"];
     NSURLSessionDataTask *dataTask = [self.session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (! error) {
             NSError *jsonError = nil;
@@ -72,7 +72,7 @@
     
     [dataTask resume];
 }
--(void)didFinishParsing:(WeatherCondition *)parsedData
+-(void)didFinishParsing:(NSMutableArray *)parsedData
 {
     NSLog(@"Parsing Done successfully");
     [self.clientDelegate didFinishFetchJSONDataFromWeatherURL:parsedData];

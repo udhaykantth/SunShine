@@ -8,6 +8,8 @@
 
 #import "WeatherListViewController.h"
 #import "WeatherTableViewCell.h"
+#import "WeatherManager.h"
+#import "WeatherUtility.h"
 
 #define kCellHeight 65
 
@@ -16,6 +18,11 @@
 @property(nonatomic,strong) UIImageView *backgroundImageView;
 @property(nonatomic,strong) UIView *containerView;
 @property (nonatomic, assign) CGFloat screenHeight;
+@property(nonatomic,strong) UILabel *todayLabel;
+@property(nonatomic,strong) UILabel *maxTemperatureLabel;
+@property(nonatomic,strong) UILabel *minTemperatureLabel;
+@property(nonatomic,strong) UIImageView* temperatureImageView;
+@property(nonatomic,strong)UILabel *statusTemperatureLabel;
 
 
 @end
@@ -25,6 +32,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"viewDidLoad");
+    [[WeatherManager sharedWeatherManager] fetchCurrentConditions];
+    [[NSNotificationCenter defaultCenter ]addObserver:self selector:@selector(loadWeatherData:) name:weatherDataReceivedNotification object:nil];
 
     [self configureHeaderView];
     
@@ -53,6 +62,10 @@
  
 
 }
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:weatherDataReceivedNotification object:self];
+}
 #pragma mark - Table view data source
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -67,16 +80,29 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
      // Return the number of rows in the section.
-    return 3;
+    NSLog(@"numberOfRowsInSection count:%lu",(unsigned long)[[WeatherManager sharedWeatherManager].currentCondition count]);
+    return [[WeatherManager sharedWeatherManager].currentCondition count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"cellForRowAtIndexPath");
     
     static NSString *cellIndentifier = @"WeatherTableViewCell";
     WeatherTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIndentifier];
     if (cell == nil) {
          cell = [[WeatherTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIndentifier];
+    }
+    if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
+           // [self configureHeaderRowCell:cell title:@"Hourly Forecast"];
+            WeatherCondition *weather = [WeatherManager sharedWeatherManager].currentCondition[indexPath.row];
+            [self configureHourlyRowCell:cell weather:weather];
+        }
+        else {
+//            WeatherCondition *weather = [WeatherManager sharedWeatherManager].currentCondition[indexPath.row-1];
+//            [self configureHourlyRowCell:cell weather:weather];
+        }
     }
     
     // Configure the cell...
@@ -84,8 +110,31 @@
     
     return cell;
 }
+- (void)configureHeaderRowCell:(WeatherTableViewCell *)cell title:(NSString *)title {
+    NSLog(@"[%s]",__PRETTY_FUNCTION__);
 
+    [cell.dayLabel setText:title];
+    
+    [cell.temperatureStatus setText:nil];
+    [cell.minTemperatureLabel setText:nil];
+    [cell.maxTemperatureLabel setText:nil];
+    [cell.temperatureStatusImageView setImage:nil];
+}
+- (void)configureHourlyRowCell:(WeatherTableViewCell *)cell weather:(WeatherCondition *)weather {
+    NSLog(@"[%s],weather data:%@",__PRETTY_FUNCTION__,[weather description]);
+    
+    if (weather != nil) {
+        [cell.dayLabel setText:weather.day];
+        NSLog(@"currentdate:%@",weather.day);
+        [cell.temperatureStatusImageView setImage:[[WeatherUtility sharedWeatherUtility] weatherIconFromString:weather.icon]];
+        [cell.minTemperatureLabel setText:weather.temperatureLow];
+        [cell.maxTemperatureLabel setText:weather.temperatureHigh];
+        [cell.temperatureStatus setText:weather.weatherMain];
 
+        
+    }
+ 
+}
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -152,65 +201,65 @@
     
     //create todays label
     
-    UILabel *todayLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, todayLabelYCoordinate, _containerView.bounds.size.width*0.50, todayLabelYCoordinate)];
-    [todayLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Thin" size:30]];
+    _todayLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, todayLabelYCoordinate, _containerView.bounds.size.width*0.50, todayLabelYCoordinate)];
+    [_todayLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Thin" size:30]];
     // [todayLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:30]];
-    [todayLabel setText:@"Today,May 27"];
-    [todayLabel setTextAlignment:NSTextAlignmentCenter];
-    [todayLabel setTextColor:[UIColor whiteColor]];
+    [_todayLabel setText:@" "];
+    [_todayLabel setTextAlignment:NSTextAlignmentCenter];
+    [_todayLabel setTextColor:[UIColor whiteColor]];
     //[todayLabel setBackgroundColor:[UIColor blackColor]];
-    [todayLabel setBackgroundColor:[UIColor clearColor]];
+    [_todayLabel setBackgroundColor:[UIColor clearColor]];
     
-    [_containerView addSubview:todayLabel];
+    [_containerView addSubview:_todayLabel];
     
     
     //create max temperature label
-    UILabel *maxTemperatureLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,maxTemperatureLabelYCoordinate , _containerView.bounds.size.width*0.50, todayLabelYCoordinate*3)];
-    [maxTemperatureLabel setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:80]];
+    _maxTemperatureLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,maxTemperatureLabelYCoordinate , _containerView.bounds.size.width*0.50, todayLabelYCoordinate*3)];
+    [_maxTemperatureLabel setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:80]];
 
  
-    [maxTemperatureLabel setText:@"80°"];//shift+option+8,40°C
-    [maxTemperatureLabel setTextAlignment:NSTextAlignmentCenter];
-    [maxTemperatureLabel setTextColor:[UIColor whiteColor]];
+    [_maxTemperatureLabel setText:@" "];//shift+option+8,40°C
+    [_maxTemperatureLabel setTextAlignment:NSTextAlignmentCenter];
+    [_maxTemperatureLabel setTextColor:[UIColor whiteColor]];
     //[maxTemperatureLabel setBackgroundColor:[UIColor greenColor]];
-    [maxTemperatureLabel setBackgroundColor:[UIColor clearColor]];
+    [_maxTemperatureLabel setBackgroundColor:[UIColor clearColor]];
     
-    [_containerView addSubview:maxTemperatureLabel];
+    [_containerView addSubview:_maxTemperatureLabel];
     
     //create min temperature label
-    UILabel *minTemperatureLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,minTemperatureLabelYCoordinate , _containerView.bounds.size.width*0.50, todayLabelYCoordinate)];
-    [minTemperatureLabel setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:40]];
+    _minTemperatureLabel = [[UILabel alloc]initWithFrame:CGRectMake(0,minTemperatureLabelYCoordinate , _containerView.bounds.size.width*0.50, todayLabelYCoordinate)];
+    [_minTemperatureLabel setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:40]];
     
     
-    [minTemperatureLabel setText:@"40°"];//shift+option+8,40°C
-    [minTemperatureLabel setTextAlignment:NSTextAlignmentCenter];
-    [minTemperatureLabel setTextColor:[UIColor whiteColor]];
+    [_minTemperatureLabel setText:@"40°"];//shift+option+8,40°C
+    [_minTemperatureLabel setTextAlignment:NSTextAlignmentCenter];
+    [_minTemperatureLabel setTextColor:[UIColor whiteColor]];
     //[minTemperatureLabel setBackgroundColor:[UIColor redColor]];
-    [minTemperatureLabel setBackgroundColor:[UIColor clearColor]];
+    [_minTemperatureLabel setBackgroundColor:[UIColor clearColor]];
     
-    [_containerView addSubview:minTemperatureLabel];
+    [_containerView addSubview:_minTemperatureLabel];
     
     //create temperature status image left of the screen
-    UIImageView* temperatureImageView = [[UIImageView alloc]initWithFrame:CGRectMake(_containerView.bounds.size.width*0.50, todayLabelYCoordinate , (_containerView.bounds.size.width)/2, _containerView.bounds.size.height-(2*todayLabelYCoordinate))];
-    [temperatureImageView setImage:[UIImage imageNamed:@"art_clear"]];
+    _temperatureImageView = [[UIImageView alloc]initWithFrame:CGRectMake(_containerView.bounds.size.width*0.50, todayLabelYCoordinate , (_containerView.bounds.size.width)/2, _containerView.bounds.size.height-(2*todayLabelYCoordinate))];
+    [_temperatureImageView setImage:[UIImage imageNamed:@"art_clear"]];
     //[temperatureImageView setBackgroundColor:[UIColor greenColor]];
     //[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"art_clear"]];
-    [temperatureImageView setContentMode:UIViewContentModeScaleAspectFill];
-    [_containerView addSubview:temperatureImageView];
+    [_temperatureImageView setContentMode:UIViewContentModeScaleAspectFill];
+    [_containerView addSubview:_temperatureImageView];
     
     
     //create   temperature status label
-    UILabel *statusTemperatureLabel = [[UILabel alloc]initWithFrame:CGRectMake(_containerView.bounds.size.width*0.50,minTemperatureLabelYCoordinate , _containerView.bounds.size.width*0.50, todayLabelYCoordinate)];
-    [statusTemperatureLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:20]];
+    _statusTemperatureLabel = [[UILabel alloc]initWithFrame:CGRectMake(_containerView.bounds.size.width*0.50,minTemperatureLabelYCoordinate , _containerView.bounds.size.width*0.50, todayLabelYCoordinate)];
+    [_statusTemperatureLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:20]];
     
     
-    [statusTemperatureLabel setText:@"Clear Sun"];
-    [statusTemperatureLabel setTextAlignment:NSTextAlignmentCenter];
-    [statusTemperatureLabel setTextColor:[UIColor whiteColor]];
+    [_statusTemperatureLabel setText:@"Clear Sun"];
+    [_statusTemperatureLabel setTextAlignment:NSTextAlignmentCenter];
+    [_statusTemperatureLabel setTextColor:[UIColor whiteColor]];
     //[statusTemperatureLabel setBackgroundColor:[UIColor redColor]];
-    [statusTemperatureLabel setBackgroundColor:[UIColor clearColor]];
+    [_statusTemperatureLabel setBackgroundColor:[UIColor clearColor]];
     
-    [_containerView addSubview:statusTemperatureLabel];
+    [_containerView addSubview:_statusTemperatureLabel];
     
     //[_containerView setBackgroundColor:[UIColor purpleColor]];
     [_containerView setBackgroundColor:[UIColor clearColor]];
@@ -221,5 +270,26 @@
 }
 - (UIStatusBarStyle)preferredStatusBarStyle {
     return UIStatusBarStyleLightContent;
+}
+-(void)updateHeaderView
+{
+    WeatherCondition *weather = [WeatherManager sharedWeatherManager].currentCondition[0];
+    [_todayLabel setText:weather.locationName];//day
+    [_maxTemperatureLabel setText: weather.temperatureHigh];
+    [_minTemperatureLabel setText:weather.temperatureLow];
+    [_statusTemperatureLabel setText:weather.weatherMain];
+    [_temperatureImageView setImage:[[WeatherUtility sharedWeatherUtility] weatherArtFromString:weather.icon]];
+
+
+}
+-(void)loadWeatherData:(NSNotification*) notifcation
+{
+    NSLog(@"%s",__PRETTY_FUNCTION__);
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+        [self updateHeaderView];
+
+});
+
 }
 @end

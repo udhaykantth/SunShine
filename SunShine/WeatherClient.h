@@ -13,7 +13,7 @@
 @protocol WeatherClientDelegate <NSObject>
 
 @required
--(void)didFinishFetchJSONDataFromWeatherURL:(WeatherCondition*)data;
+-(void)didFinishFetchJSONDataFromWeatherURL:(NSMutableArray*)data;
 
 @end
 

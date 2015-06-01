@@ -9,12 +9,16 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import "WeatherClient.h"
+extern NSString * const weatherDataReceivedNotification;
+
 
 
 @interface WeatherManager : NSObject <CLLocationManagerDelegate,WeatherClientDelegate>
 +(instancetype)sharedWeatherManager;
 
 @property (nonatomic, strong, readonly) CLLocation *currentLocation;
+@property (nonatomic,strong)  NSMutableArray* currentCondition;
+
 
 
 -(void)fetchCurrentConditions;

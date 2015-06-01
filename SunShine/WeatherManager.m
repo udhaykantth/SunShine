@@ -7,6 +7,8 @@
 //
 
 #import "WeatherManager.h"
+NSString * const weatherDataReceivedNotification = @"weatherDataReceivedNotification";
+
 
 @interface WeatherManager()
 @property (nonatomic, strong) WeatherClient *client;
@@ -36,6 +38,7 @@
         [_client setClientDelegate:self];
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager setDelegate:self];
+        _currentCondition  = [[NSMutableArray alloc]init];
         //[self fetchCurrentConditions];
 
     }
@@ -52,8 +55,10 @@
 }
 
 #pragma mark - WeatherClient Delegate Methods
--(void)didFinishFetchJSONDataFromWeatherURL:(WeatherCondition *)data
+-(void)didFinishFetchJSONDataFromWeatherURL:(NSMutableArray *)data
 {
     NSLog(@"Parsed data completely");
+    _currentCondition = data;
+    [[NSNotificationCenter defaultCenter] postNotificationName:weatherDataReceivedNotification object:nil];
 }
 @end

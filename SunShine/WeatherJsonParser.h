@@ -12,7 +12,7 @@
 
 @protocol WeatherJsonParserDelegate <NSObject>
 
--(void)didFinishParsing:(WeatherCondition*)parsedData;
+-(void)didFinishParsing:(NSMutableArray*)parsedData;
 -(void)didFinishParsingWithError:(NSError**) error;
 
 @end

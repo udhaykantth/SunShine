@@ -46,12 +46,12 @@ LocationCoordinates LocationCoordinatesMake(double latitude, double longitude);
 @property (nonatomic, strong) NSString* country;
 @property (nonatomic, strong) NSDate* sunset;
 @property (nonatomic, strong) NSDate* sunrise;
-@property (nonatomic, strong) NSDate* date;
+@property (nonatomic, strong) NSString* day;
 @property (nonatomic, strong) NSString *icon;
 @property (nonatomic, strong) NSNumber *humidity;
-@property (nonatomic, strong) NSNumber *temperature;
-@property (nonatomic, strong) NSNumber *temperatureHigh;
-@property (nonatomic, strong) NSNumber *temperatureLow;
+@property (nonatomic, strong) NSString *temperature;
+@property (nonatomic, strong) NSString *temperatureHigh;
+@property (nonatomic, strong) NSString *temperatureLow;
 @property (nonatomic, strong) NSString *weatherDescription;
 @property (nonatomic, strong) NSString *weatherMain;
 @property (nonatomic, strong) NSNumber *pressure;
@@ -60,10 +60,12 @@ LocationCoordinates LocationCoordinatesMake(double latitude, double longitude);
 @property (nonatomic, strong) NSNumber *windSpeed;
 @property (nonatomic, strong) NSNumber *windDirection;
 @property (nonatomic, strong) NSString *condition;
-@property (nonatomic,strong) NSNumber *locationID;
+@property (nonatomic,strong) NSNumber *locationID;//cityID
 @property (nonatomic,strong) NSString *base;
-@property (nonatomic,strong) NSNumber *weatherID;
+@property (nonatomic,strong) NSNumber *weatherID;//weather ID
 @property (nonatomic,strong) NSNumber *weatherSubID;
+- (NSString *)imageName;
+
 
 
 

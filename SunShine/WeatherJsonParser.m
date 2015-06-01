@@ -7,6 +7,7 @@
 //
 
 #import "WeatherJsonParser.h"
+#import "WeatherUtility.h"
 
 
 @interface WeatherJsonParser()
@@ -48,13 +49,16 @@
     if ([base length]!= 0 && nil != base) {
         [weatherData setBase:base];
     }
-    NSNumber* weatherID = [json objectForKey:@"id"];
-    if (!(weatherID < 0)) {
-        [weatherData setWeatherID:weatherID];
+    NSNumber* locationID = [json objectForKey:@"id"];
+    if (!(locationID < 0)) {
+        [weatherData setLocationID:locationID];
     }
     NSNumber* date = [json objectForKey:@"dt"];
     if (!(date < 0)) {
          // convert interval into date object
+        [weatherData setDay:[[WeatherUtility sharedWeatherUtility]dayFromDateInterval:date]];
+        NSLog(@"WJP date:%@",[[WeatherUtility sharedWeatherUtility]dayFromDateInterval:date]);
+
         
     }
     NSDictionary* main = [json objectForKey:@"main"];
@@ -65,15 +69,16 @@
         }
         NSNumber* temp_min = [main objectForKey:@"temp_min"];
         if (!(temp_min < 0)) {
-            [weatherData setTemperatureLow:temp_min];
+            
+            [weatherData setTemperatureLow:[[WeatherUtility sharedWeatherUtility] numberRoundUpToTwoDigit:temp_min]];
         }
         NSNumber* temp_max = [main objectForKey:@"temp_max"];
         if (!(temp_max < 0)) {
-            [weatherData setTemperatureHigh:temp_max];
+            [weatherData setTemperatureHigh:[[WeatherUtility sharedWeatherUtility] numberRoundUpToTwoDigit:temp_max]];
         }
         NSNumber* temperature = [main objectForKey:@"temp"];
         if (!(temperature < 0)) {
-            [weatherData setTemperature:temperature];
+            [weatherData setTemperature:[[WeatherUtility sharedWeatherUtility] numberRoundUpToTwoDigit:temperature]];
         }
         NSNumber* pressure = [main objectForKey:@"pressure"];
         if (!(pressure < 0)) {
@@ -146,7 +151,7 @@
             NSDictionary* weatherDict = [weather objectAtIndex:i];
             long weatherID =[[weatherDict objectForKey:@"id"]longValue];
             if (!(weatherID < 0)) {
-                [weatherData setWeatherSubID:[NSNumber numberWithLong:weatherID]];
+                [weatherData setWeatherID:[NSNumber numberWithLong:weatherID]];
             }
             NSString* main= [weatherDict objectForKey:@"main"];
             if ([main length]!=0) {
@@ -189,9 +194,11 @@
   
     }
     NSLog(@"Parsing Done...");
-    NSLog(@"Parsed Weather data is:%@",[WeatherCondition description]);
+    NSLog(@"Parsed Weather data is:%@",[weatherData description]);
+     NSMutableArray* weatherArray = [NSMutableArray array];
+    [weatherArray addObject:weatherData];
 
-    [self.delegate didFinishParsing:weatherData];
+    [self.delegate didFinishParsing:weatherArray];
  
 }
 
