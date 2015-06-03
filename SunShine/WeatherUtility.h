@@ -16,6 +16,8 @@
 -(NSString*)numberRoundUpToTwoDigit:(NSNumber*)tempInDecimal;
 -(NSString*)dateStringFromIntervalTime:(NSNumber*) interval;
 -(NSString*)dayFromDateInterval:(NSNumber*) interval;
+-(NSString*)stringFromTwoDigitRoundUpDecimal:(double)decimal;
+
 
 
 @end

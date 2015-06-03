@@ -12,16 +12,22 @@
 extern NSString * const weatherDataReceivedNotification;
 
 
-
 @interface WeatherManager : NSObject <CLLocationManagerDelegate,WeatherClientDelegate>
 +(instancetype)sharedWeatherManager;
 
 @property (nonatomic, strong, readonly) CLLocation *currentLocation;
 @property (nonatomic,strong)  NSMutableArray* currentCondition;
+@property (nonatomic, strong, readwrite) NSMutableArray  *dailyWeather;
+@property (nonatomic, strong, readwrite) NSMutableArray   *hourlyWeather;
+@property (nonatomic,readwrite)BOOL isDailyWeather; // if yes,daily weather.Otherwise,hourly weather 
 
 
 
 -(void)fetchCurrentConditions;
+-(void)fetchDailyWeatherCondition;
+-(void)fetchHourlyWeatherCondition;
+
+
 
 
 @end

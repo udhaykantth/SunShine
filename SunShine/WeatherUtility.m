@@ -134,5 +134,16 @@
     return  [_dateFormatter stringFromDate:date];
 
 }
+-(NSString*)stringFromTwoDigitRoundUpDecimal:(double)decimal
+{
+    NSNumber *number = [NSNumber numberWithDouble:decimal];
+    [_numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    [_numberFormatter setMaximumFractionDigits:1];
+    [_numberFormatter setRoundingMode:NSNumberFormatterRoundUp];
+    
+    NSString *numberString = [NSString stringWithFormat:@"%@°",[_numberFormatter stringFromNumber:number]];
+    NSLog(@"Result...%@",numberString);
+    return numberString;
+ }
 
 @end

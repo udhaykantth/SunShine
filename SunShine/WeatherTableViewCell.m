@@ -26,6 +26,7 @@
         [self setSelectionStyle:UITableViewCellSelectionStyleNone];
         [self setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.2]];
         [self.contentView setBackgroundColor:[UIColor clearColor]];
+        
 
         [self configureUIControls];
 
@@ -51,7 +52,7 @@
     
     //create a dayLabel
     _dayLabel = [[UILabel alloc]initWithFrame:CGRectMake(kImageViewWidth+10,self.bounds.origin.y, 200, 30)];
-     [_dayLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:30]];
+     [_dayLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:20]];
      [_dayLabel setText:@"Tommorrow"];
     [_dayLabel setTextAlignment:NSTextAlignmentLeft];
     [_dayLabel setTextColor:[UIColor whiteColor]];
@@ -69,7 +70,7 @@
     
     //create a dayLabel
     _maxTemperatureLabel = [[UILabel alloc]initWithFrame:CGRectMake(_dayLabel.frame.origin.x+_dayLabel.frame.size.width,self.bounds.origin.y,(self.frame.size.width)-( _temperatureStatusImageView.frame.size.width+_dayLabel.frame.size.width)+35, 30)];
-    [_maxTemperatureLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:30]];
+    [_maxTemperatureLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:20]];
     [_maxTemperatureLabel setText:@"30°"];
     [_maxTemperatureLabel setTextAlignment:NSTextAlignmentCenter];
     [_maxTemperatureLabel setTextColor:[UIColor whiteColor]];

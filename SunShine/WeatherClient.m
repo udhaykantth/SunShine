@@ -48,11 +48,32 @@
     
     [dataTask resume];
 }
-- (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate
+//- (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate
+- (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate type:(WeatherConditionType)WeatherconditionType;
 {
     
-    //TODO:// coordinates has to be dynamic.
-    NSURL *url = [NSURL URLWithString:@"http://api.openweathermap.org/data/2.5/weather?lat=17.38&lon=78.47&units=metric"];
+    //TODO:// coordinates has to be dynamic and metrics
+    //frame Url based onthe type of weather condition.
+    NSURL *url;
+    switch (WeatherconditionType) {
+        case WeatherConditionTypeCurrent:
+            url =  [NSURL URLWithString:@"http://api.openweathermap.org/data/2.5/weather?lat=17.38&lon=78.47&units=metric"];
+            
+            break;
+        case WeatherConditionTypeHourly:
+            url = [NSURL URLWithString:@"http://api.openweathermap.org/data/2.5/forecast?lat=17.3700&lon=78.4800&units=metric&cnt=12"];
+            
+             break;
+        case WeatherConditionTypeDaily:
+            url =  [NSURL URLWithString:@"http://api.openweathermap.org/data/2.5/forecast/daily?lat=17.3700&lon=78.4800&units=metric&cnt=7"];
+           
+            break;
+            
+        default:
+            url =  [NSURL URLWithString:@"http://www.google.com"];
+            break;
+    }
+    
     NSURLSessionDataTask *dataTask = [self.session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (! error) {
             NSError *jsonError = nil;
@@ -63,9 +84,12 @@
                 [parser parseJSON];
             }
             else {
+                NSLog(@"Could not get the data!!");
             }
         }
         else {
+            NSLog(@"Unable to connect to the server,Try again!!");
+
         }
         
     }];

@@ -11,12 +11,12 @@ NSString * const weatherDataReceivedNotification = @"weatherDataReceivedNotifica
 
 
 @interface WeatherManager()
+{
+    BOOL isDailyWeather;
+}
 @property (nonatomic, strong) WeatherClient *client;
 @property (nonatomic, strong, readwrite) CLLocation *currentLocation;
 @property (nonatomic, strong) CLLocationManager *locationManager;
-
-
-
 @end
 
 @implementation WeatherManager
@@ -39,6 +39,9 @@ NSString * const weatherDataReceivedNotification = @"weatherDataReceivedNotifica
         _locationManager = [[CLLocationManager alloc] init];
         [_locationManager setDelegate:self];
         _currentCondition  = [[NSMutableArray alloc]init];
+        _dailyWeather = [[NSMutableArray alloc] init];
+        _hourlyWeather = [[NSMutableArray alloc ]init];
+        _isDailyWeather  = NO;
         //[self fetchCurrentConditions];
 
     }
@@ -51,14 +54,52 @@ NSString * const weatherDataReceivedNotification = @"weatherDataReceivedNotifica
     CLLocationCoordinate2D coordinate;
     coordinate.latitude =17.38;
     coordinate.longitude = 78.47;
-    [self.client fetchJSONDataFromCoordinates:coordinate];
+    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeCurrent];
+}
+-(void)fetchDailyWeatherCondition
+{
+    _isDailyWeather = YES;
+    //TODO:// dynamic coordinates as parameter
+    CLLocationCoordinate2D coordinate;
+    coordinate.latitude =17.38;
+    coordinate.longitude = 78.47;
+    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeDaily];
+
+}
+-(void)fetchHourlyWeatherCondition
+{
+    _isDailyWeather = NO;
+    //TODO:// dynamic coordinates as parameter
+    CLLocationCoordinate2D coordinate;
+    coordinate.latitude =17.38;
+    coordinate.longitude = 78.47;
+    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeHourly];
+
 }
 
 #pragma mark - WeatherClient Delegate Methods
 -(void)didFinishFetchJSONDataFromWeatherURL:(NSMutableArray *)data
 {
     NSLog(@"Parsed data completely");
-    _currentCondition = data;
-    [[NSNotificationCenter defaultCenter] postNotificationName:weatherDataReceivedNotification object:nil];
+    //_currentCondition = data;
+    if (_isDailyWeather) {
+        _dailyWeather = data;
+
+    }
+    else
+    {
+        _hourlyWeather = data;
+    }
+     [[NSNotificationCenter defaultCenter] postNotificationName:weatherDataReceivedNotification object:nil];
+}
+-(void)clearWeatherData
+{
+    if ([_hourlyWeather count ]> 0){
+        [_hourlyWeather removeAllObjects];
+    }
+    if ([_dailyWeather count] > 0 ) {
+        [_dailyWeather removeAllObjects];
+        
+    }
 }
 @end

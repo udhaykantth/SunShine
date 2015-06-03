@@ -11,7 +11,7 @@
 @implementation WeatherCondition
 @synthesize  LocationCoordinate,locationName,country,sunset, sunrise,day,icon
 ,humidity,temperature,temperatureHigh,temperatureLow,weatherDescription,weatherMain
-,pressure,seaLevel,groundLevel,windSpeed,windDirection,condition,locationID,base,weatherID,weatherSubID;
+,pressure,seaLevel,groundLevel,windSpeed,windDirection,condition,locationID,base,weatherID,weatherSubID,hourlyDateTime;
 
 - (instancetype)init
 {
@@ -45,6 +45,7 @@
     self.base = nil;
     self.weatherID = nil;
     self.weatherSubID = nil;
+    self.hourlyDateTime = nil;
 
 }
 - (void)dealloc
@@ -53,7 +54,7 @@
 }
 -(NSString *)description
 {
-    return [NSString stringWithFormat:@"[WeatherCondition: LocationName: %@,Country:%@],Sunrise:%@,Sunset :%@,\n,date:%@, icon:%@, humidity:%@ , temperature:%@, tempHigh:%@,tempLow:%@,weatherDescription:%@,Weathermain:%@, pressure:%@,SeaLevel:%@,GroundLevel:%@, windSpeed:%@,WindDirection:%@,Condition:%@,LocationID:%@,base:%@, weatherID:%@ , weatherSubID:%@",
-            [self locationName], [self country], [[self sunrise] description],[[self sunset] description],[[self day] description],[self icon],[self humidity],[self temperature],[self temperatureHigh],[self temperatureLow],[self weatherDescription],[self weatherMain],[self pressure],[self seaLevel],[self groundLevel],[self windSpeed],[self windDirection],[self condition],[self locationID],[self base],[self weatherID],[self weatherSubID]];
+    return [NSString stringWithFormat:@"[WeatherCondition: LocationName: %@,Country:%@],Sunrise:%@,Sunset :%@,\n,date:%@, icon:%@, humidity:%@ , temperature:%@, tempHigh:%@,tempLow:%@,weatherDescription:%@,Weathermain:%@, pressure:%@,SeaLevel:%@,GroundLevel:%@, windSpeed:%@,WindDirection:%@,Condition:%@,LocationID:%@,base:%@, weatherID:%@ , weatherSubID:%@, hourlyDateTimestring:%@",
+            [self locationName], [self country], [[self sunrise] description],[[self sunset] description],[[self day] description],[self icon],[self humidity],[self temperature],[self temperatureHigh],[self temperatureLow],[self weatherDescription],[self weatherMain],[self pressure],[self seaLevel],[self groundLevel],[self windSpeed],[self windDirection],[self condition],[self locationID],[self base],[self weatherID],[self weatherSubID],[self hourlyDateTime]];
 } 
 @end

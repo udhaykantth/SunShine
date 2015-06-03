@@ -29,7 +29,66 @@ typedef struct {
  *  Discussion:
  *    Returns a new WeatherCoordinates at the given latitude and longitude
  */
-LocationCoordinates LocationCoordinatesMake(double latitude, double longitude);
+static inline LocationCoordinates LocationCoordinatesMake(double latitude, double longitude) {
+    LocationCoordinates aLocationCoordinates;
+    aLocationCoordinates.latitude = latitude;
+    aLocationCoordinates.longitude= longitude;
+    return  aLocationCoordinates;
+
+}
+
+/*
+ *  WeatherTemperature
+ *
+ *  Discussion:
+ *    A structure that contains a weather temperature.
+ *
+ *  Fields:
+ *    dayTemperature:
+ *      The day Temperature in double.
+ *    minTemperature:
+ *      The min Temperature in double.
+ *    maxTemperature:
+ *      The max Temperature in double.
+ *    nightTemperature:
+ *      The night Temperature in double.
+ *    eveningTemperature:
+ *      The evening Temperature in double.
+ *    morningTemperature:
+ *      The morning Temperature in double.
+ */
+typedef struct {
+    double dayTemperature;
+    double minTemperature;
+    double maxTemperature;
+    double nightTemperature;
+    double eveningTemperature;
+    double morningTemperature;
+
+} Temperature;
+/*
+ *  WeatherTemperatureMake:
+ *
+ *  Discussion:
+ *    Returns a new Weather temperature at the given day temperature
+ */
+static inline Temperature TemperatureMake(double dayTemperature,
+                            double minTemperature,
+                            double maxTemperature,
+                            double nightTemperature,
+                            double eveningTemperature,
+                                   double morningTemperature) {
+
+    Temperature aTemperature;
+    aTemperature.dayTemperature = dayTemperature;
+    aTemperature.minTemperature = minTemperature;
+    aTemperature.maxTemperature = maxTemperature;
+    aTemperature.nightTemperature = nightTemperature;
+    aTemperature.eveningTemperature = eveningTemperature;
+    aTemperature.morningTemperature = morningTemperature;
+    return aTemperature;
+    
+}
 
 @interface WeatherCondition : NSObject
 {
@@ -42,6 +101,8 @@ LocationCoordinates LocationCoordinatesMake(double latitude, double longitude);
  *    Returns the coordinate of the current location.
  */
 @property (nonatomic, readwrite) LocationCoordinates LocationCoordinate;
+@property (nonatomic) Temperature currentTemperature;
+
 @property (nonatomic, strong) NSString* locationName;
 @property (nonatomic, strong) NSString* country;
 @property (nonatomic, strong) NSDate* sunset;
@@ -64,8 +125,8 @@ LocationCoordinates LocationCoordinatesMake(double latitude, double longitude);
 @property (nonatomic,strong) NSString *base;
 @property (nonatomic,strong) NSNumber *weatherID;//weather ID
 @property (nonatomic,strong) NSNumber *weatherSubID;
-- (NSString *)imageName;
-
+@property (nonatomic,strong) NSString *hourlyDateTime;
+ 
 
 
 
