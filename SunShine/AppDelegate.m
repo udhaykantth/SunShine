@@ -25,7 +25,9 @@
     
     //// testing json data
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = [[WeatherListViewController alloc] init];
+    WeatherListViewController *listVC = [[WeatherListViewController alloc] init];
+    self.navigationController = [[UINavigationController alloc] initWithRootViewController:listVC];
+    self.window.rootViewController = self.navigationController;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     return YES;

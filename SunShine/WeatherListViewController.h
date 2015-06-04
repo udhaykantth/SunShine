@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WeatherListViewController : UITableViewController
+@interface WeatherListViewController : UITableViewController<UINavigationControllerDelegate>
+
 
 @end

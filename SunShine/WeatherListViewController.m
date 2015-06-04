@@ -10,6 +10,9 @@
 #import "WeatherTableViewCell.h"
 #import "WeatherManager.h"
 #import "WeatherUtility.h"
+#import "WeatherListDetailPushAnimator.h"
+#import "WeatherListDetailPopAnimator.h"
+#import "WeatherDetailViewController.h"
 
 #define kCellHeight 65
 
@@ -32,6 +35,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     NSLog(@"viewDidLoad");
+    self.navigationController.delegate = self;
     //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [[WeatherManager sharedWeatherManager] fetchDailyWeatherCondition];
     [[NSNotificationCenter defaultCenter ]addObserver:self selector:@selector(loadWeatherData:) name:weatherDataReceivedNotification object:nil];
@@ -67,7 +71,7 @@
 {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:weatherDataReceivedNotification object:self];
 }
-#pragma mark - Table view data source
+#pragma mark - Table view data source delegates
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     return kCellHeight;
@@ -146,6 +150,17 @@
     }
  
 }
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    NSLog(@"didSelectRowAtIndexPath");
+    WeatherDetailViewController *weatherDetailViewController = [[WeatherDetailViewController alloc ]init];
+    WeatherCondition *detailWeather = [WeatherManager sharedWeatherManager].dailyWeather[indexPath.row+1];
+    [weatherDetailViewController setDetailWeatherCondition:detailWeather] ;
+
+    [self.navigationController pushViewController:weatherDetailViewController animated:YES];
+}
+
+
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -303,5 +318,23 @@
 
 });
 
+}
+#pragma mark - 
+-(id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
+{
+    //this delegate is required an animator object for navigation controller how to perform animation.
+    //both will do same type of animation but with different direction.
+    switch (operation) {
+        case UINavigationControllerOperationPush:
+            return [[WeatherListDetailPushAnimator alloc]init];
+            break;
+        case UINavigationControllerOperationPop:
+            return [[WeatherListDetailPopAnimator alloc]init];
+            break;
+            
+        default:
+            return nil;
+            break;
+    }
 }
 @end
