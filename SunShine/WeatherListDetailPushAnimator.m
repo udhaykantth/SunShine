@@ -7,7 +7,11 @@
 //
 
 #import "WeatherListDetailPushAnimator.h"
-#define kTransitionDuration 0.35
+#import "WeatherListViewController.h"
+#import "WeatherDetailViewController.h"
+#import "WeatherTableViewCell.h"
+
+#define kTransitionDuration 0.40
 
 @implementation WeatherListDetailPushAnimator
 #pragma mark -- UIViewControllerContextTransitioning
@@ -21,17 +25,26 @@
      2)Use one animation block.
      3)Finish the animation
      */
+    WeatherDetailViewController *toViewController =(WeatherDetailViewController*) [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+     WeatherListViewController *fromViewController =(WeatherListViewController*) [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     
-    UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    
     UIView *container = [transitionContext containerView];
+ 
+    WeatherTableViewCell *selectedCell = (WeatherTableViewCell*)[fromViewController.tableView cellForRowAtIndexPath:[[fromViewController.tableView indexPathsForSelectedRows] firstObject]];
+    UIView *snapShotView =  [selectedCell.contentView snapshotViewAfterScreenUpdates:NO];
+    snapShotView.frame = [container convertRect:selectedCell.frame fromView:fromViewController.view];
+    NSLog(@"snapShotView:%@",NSStringFromCGRect(snapShotView.frame));
+
     
-    //create rect frame top and bottom halves of the fromVC screen
-    CGSize viewSize = fromViewController.view.bounds.size;
-    CGRect topFrame = CGRectMake(0, 0, viewSize.width, viewSize.height/2);
-    CGRect bottomFrame =  CGRectMake(0, viewSize.height/2, viewSize.width, viewSize.height/2);
     
-    NSLog(@"viewSize:[%@],topFrame:[%@],bottomFrame:[%@]",NSStringFromCGSize(viewSize),NSStringFromCGRect(topFrame),NSStringFromCGRect(bottomFrame));
+     CGPoint viewPoint = snapShotView.frame.origin;
+     CGSize viewSize = snapShotView.frame.size;
+     CGRect topFrame =  CGRectMake(0, 0, viewSize.width, viewPoint.y);
+     CGRect bottomFrame =  CGRectMake(0, viewPoint.y, viewSize.width, (fromViewController.view.bounds.size.height)- viewPoint.y);
+    
+    
+    NSLog(@"viewPoint:[%@],topFrame:[%@],bottomFrame:[%@]",NSStringFromCGPoint(viewPoint),NSStringFromCGRect(topFrame),NSStringFromCGRect(bottomFrame));
     
     //create snapshots, to slice up origin view and animate parts around the screen
     UIView *topSnapShot = [fromViewController.view resizableSnapshotViewFromRect:topFrame afterScreenUpdates:NO  withCapInsets:UIEdgeInsetsZero];

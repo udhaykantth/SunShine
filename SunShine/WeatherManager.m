@@ -8,6 +8,8 @@
 
 #import "WeatherManager.h"
 NSString * const weatherDataReceivedNotification = @"weatherDataReceivedNotification";
+NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNotification";
+
 
 
 @interface WeatherManager()
@@ -91,6 +93,11 @@ NSString * const weatherDataReceivedNotification = @"weatherDataReceivedNotifica
         _hourlyWeather = data;
     }
      [[NSNotificationCenter defaultCenter] postNotificationName:weatherDataReceivedNotification object:nil];
+}
+-(void)didFailFetchJSONDataFromWeatherURL
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:weatherDataFetchFailedNotification object:nil];
+
 }
 -(void)clearWeatherData
 {

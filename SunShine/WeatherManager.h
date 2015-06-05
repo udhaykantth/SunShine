@@ -10,6 +10,8 @@
 #import <CoreLocation/CoreLocation.h>
 #import "WeatherClient.h"
 extern NSString * const weatherDataReceivedNotification;
+extern NSString * const weatherDataFetchFailedNotification;
+
 
 
 @interface WeatherManager : NSObject <CLLocationManagerDelegate,WeatherClientDelegate>

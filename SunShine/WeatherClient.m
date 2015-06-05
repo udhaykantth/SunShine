@@ -48,8 +48,7 @@
     
     [dataTask resume];
 }
-//- (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate
-- (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate type:(WeatherConditionType)WeatherconditionType;
+ - (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate type:(WeatherConditionType)WeatherconditionType;
 {
     
     //TODO:// coordinates has to be dynamic and metrics
@@ -85,10 +84,13 @@
             }
             else {
                 NSLog(@"Could not get the data!!");
+               [self.clientDelegate didFailFetchJSONDataFromWeatherURL];
+
             }
         }
         else {
-            NSLog(@"Unable to connect to the server,Try again!!");
+            NSLog(@"No internet connectivity,Try again!!");
+            [self.clientDelegate didFailFetchJSONDataFromWeatherURL];
 
         }
         
@@ -100,5 +102,9 @@
 {
     NSLog(@"Parsing Done successfully");
     [self.clientDelegate didFinishFetchJSONDataFromWeatherURL:parsedData];
+}
+-(void)didFinishParsingWithError:(NSError *__autoreleasing *)error {
+    [self.clientDelegate didFailFetchJSONDataFromWeatherURL];
+
 }
 @end

@@ -7,8 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+@class  WeatherTableViewCell;
+@class  WeatherCondition;
 
 @interface WeatherListViewController : UITableViewController<UINavigationControllerDelegate>
+-(WeatherTableViewCell*)tableViewCellForWeather:(WeatherCondition*)aWeather;
 
 
 @end

@@ -14,7 +14,7 @@
 #import "WeatherListDetailPopAnimator.h"
 #import "WeatherDetailViewController.h"
 
-#define kCellHeight 65
+#define kCellHeight 65.0
 
 
 @interface WeatherListViewController ()
@@ -38,7 +38,8 @@
     self.navigationController.delegate = self;
     //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [[WeatherManager sharedWeatherManager] fetchDailyWeatherCondition];
-    [[NSNotificationCenter defaultCenter ]addObserver:self selector:@selector(loadWeatherData:) name:weatherDataReceivedNotification object:nil];
+    [self addObservers];
+    
 
     [self configureHeaderView];
     
@@ -69,7 +70,9 @@
 }
 -(void)dealloc
 {
-    [[NSNotificationCenter defaultCenter]removeObserver:self name:weatherDataReceivedNotification object:self];
+    [self removeObservers];
+    
+
 }
 #pragma mark - Table view data source delegates
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -208,7 +211,7 @@
 #pragma mark - Custom Methods
 -(void)configureHeaderView
 {
-    
+    [self.navigationItem setTitle:@"SunShine"];
     _backgroundImageView = [[UIImageView alloc ]initWithImage:[UIImage imageNamed:@"Sky"]];
     [self.backgroundImageView setContentMode:UIViewContentModeScaleAspectFill];
     [self.tableView setBackgroundView:self.backgroundImageView];
@@ -258,7 +261,7 @@
     [_minTemperatureLabel setFont:[UIFont fontWithName:@"HelveticaNeue-UltraLight" size:40]];
     
     
-    [_minTemperatureLabel setText:@"40°"];//shift+option+8,40°C
+    [_minTemperatureLabel setText:@""];//shift+option+8,40°C
     [_minTemperatureLabel setTextAlignment:NSTextAlignmentCenter];
     [_minTemperatureLabel setTextColor:[UIColor whiteColor]];
     //[minTemperatureLabel setBackgroundColor:[UIColor redColor]];
@@ -268,7 +271,7 @@
     
     //create temperature status image left of the screen
     _temperatureImageView = [[UIImageView alloc]initWithFrame:CGRectMake(_containerView.bounds.size.width*0.50, todayLabelYCoordinate , (_containerView.bounds.size.width)/2, _containerView.bounds.size.height-(2*todayLabelYCoordinate))];
-    [_temperatureImageView setImage:[UIImage imageNamed:@"art_clear"]];
+    [_temperatureImageView setImage:nil];
     //[temperatureImageView setBackgroundColor:[UIColor greenColor]];
     //[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"art_clear"]];
     [_temperatureImageView setContentMode:UIViewContentModeScaleAspectFill];
@@ -280,7 +283,7 @@
     [_statusTemperatureLabel setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:25]];
     
     
-    [_statusTemperatureLabel setText:@"Clear Sun"];
+    [_statusTemperatureLabel setText:@""];
     [_statusTemperatureLabel setTextAlignment:NSTextAlignmentCenter];
     [_statusTemperatureLabel setTextColor:[UIColor whiteColor]];
     //[statusTemperatureLabel setBackgroundColor:[UIColor redColor]];
@@ -309,6 +312,8 @@
 
 
 }
+#pragma mark Notifications methods
+
 -(void)loadWeatherData:(NSNotification*) notifcation
 {
     NSLog(@"%s",__PRETTY_FUNCTION__);
@@ -319,7 +324,15 @@
 });
 
 }
-#pragma mark - 
+-(void)fetchFailed:(NSNotification*)notification {
+    NSLog(@"%s",__PRETTY_FUNCTION__);
+    dispatch_async(dispatch_get_main_queue(), ^{
+         [self showAlert];
+        
+    });
+
+}
+#pragma mark - navigationController transition
 -(id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
 {
     //this delegate is required an animator object for navigation controller how to perform animation.
@@ -336,5 +349,37 @@
             return nil;
             break;
     }
+}
+-(WeatherTableViewCell*)tableViewCellForWeather:(WeatherCondition*)aWeather
+{
+    NSUInteger weatherIndex = [[WeatherManager sharedWeatherManager].dailyWeather indexOfObject:aWeather];
+         if (weatherIndex == NSNotFound) {
+            return nil;
+        }
+    NSLog(@"tableViewCellForWeather index:%lu",(unsigned long)weatherIndex);
+  return  (WeatherTableViewCell*) [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:weatherIndex inSection:0]];
+        
+    
+ }
+#pragma mark --notification observers
+-(void)addObservers {
+    [[NSNotificationCenter defaultCenter ]addObserver:self selector:@selector(loadWeatherData:) name:weatherDataReceivedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchFailed:) name:weatherDataFetchFailedNotification object:nil];
+}
+-(void)removeObservers {
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:weatherDataReceivedNotification object:self];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:weatherDataFetchFailedNotification object:self];
+
+}
+#pragma mark 
+-(void)showAlert {
+    
+    UIAlertController *errorIssueController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Unable to load data. Connectivity error!" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *okButton = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil];
+    [errorIssueController addAction:okButton];
+    [self presentViewController:errorIssueController animated:YES completion:nil];
+    
+    
+
 }
 @end

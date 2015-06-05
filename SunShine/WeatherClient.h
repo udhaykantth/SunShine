@@ -24,6 +24,7 @@ typedef NS_OPTIONS(NSUInteger, WeatherConditionType) {
 
 @required
 -(void)didFinishFetchJSONDataFromWeatherURL:(NSMutableArray*)data;
+-(void)didFailFetchJSONDataFromWeatherURL;
 
 @end
 
