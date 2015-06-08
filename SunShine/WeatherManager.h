@@ -12,22 +12,46 @@
 extern NSString * const weatherDataReceivedNotification;
 extern NSString * const weatherDataFetchFailedNotification;
 
-
+/*!
+ @class WeatherManager
+ WeatherManager is a single-ton class whose objects functions as a wrapper for
+ objects weatherClient class, weather condition class & stores the data in objects to display in table view.
+ */
 
 @interface WeatherManager : NSObject <CLLocationManagerDelegate,WeatherClientDelegate>
+/*!
+ @method sharedWeatherManager
+ @abstract Initializes a single-ton class.
+ @result an initialized single-ton WeatherManager.
+ */
 +(instancetype)sharedWeatherManager;
 
 @property (nonatomic, strong, readonly) CLLocation *currentLocation;
 @property (nonatomic,strong)  NSMutableArray* currentCondition;
 @property (nonatomic, strong, readwrite) NSMutableArray  *dailyWeather;
 @property (nonatomic, strong, readwrite) NSMutableArray   *hourlyWeather;
-@property (nonatomic,readwrite)BOOL isDailyWeather; // if yes,daily weather.Otherwise,hourly weather 
 
+/*!
+ @method fetchCurrentConditions
+ @abstract fetch the data from server providing the current latitude and longitude
+ @result invokes the weather client api to fetch the json from the server.
+ */
 
 
 -(void)fetchCurrentConditions;
+/*!
+ @method fetchDailyWeatherCondition
+ @abstract fetch the daily weather data from server providing the locations.
+ @result invokes the weather client api to fetch the json data of type daily weather from the server.
+ */
 -(void)fetchDailyWeatherCondition;
+/*!
+ @method fetchHourlyWeatherCondition
+ @abstract fetch the hourly weather data from the server providing the locations.
+ @result invokes the weather client api to fetch the json data of type hourly weatehr condition from the server.
+ */
 -(void)fetchHourlyWeatherCondition;
+
 
 
 

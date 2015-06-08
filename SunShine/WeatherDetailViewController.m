@@ -42,8 +42,10 @@
 
 @implementation WeatherDetailViewController
 
+#pragma mark --View methods
+
 - (void)viewDidLoad {
-    NSLog(@"[%s]",__PRETTY_FUNCTION__);
+    //NSLog(@"[%s]",__PRETTY_FUNCTION__);
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.navigationItem setTitle:@"Day Weather Report"];
@@ -56,8 +58,8 @@
     // Dispose of any resources that can be recreated.
 }
 -(void)configureView {
-    NSLog(@"[%s]",__PRETTY_FUNCTION__);
-    NSLog(@"detail data:%@",[_detailWeatherCondition description]);
+    //NSLog(@"[%s]",__PRETTY_FUNCTION__);
+    //NSLog(@"detail data:%@",[_detailWeatherCondition description]);
 
     if (self.detailWeatherCondition) {
         //update the user interface with weather in detail.
@@ -73,7 +75,7 @@
             int labelHeight = 20;
             
            // [_containerView setBackgroundColor:[UIColor redColor]];
-            NSLog(@"_containerframe:%@",NSStringFromCGRect(_containerView.frame));
+            //NSLog(@"_containerframe:%@",NSStringFromCGRect(_containerView.frame));
             
             _topDescription = [[UILabel alloc]initWithFrame:CGRectMake(_containerView.bounds.origin.x+20, _containerView.bounds.origin.y, fullContainerViewWidth-(labelHeight*2), labelHeight*4)];
             //[_topDescription setBackgroundColor:[UIColor blackColor]];
@@ -306,7 +308,7 @@
 
 #pragma mark -- detailWeatherCondition
 -(void)setDetailWeatherCondition :(WeatherCondition*)newDetailItem{
-    NSLog(@"[%s]",__PRETTY_FUNCTION__);
+    //NSLog(@"[%s]",__PRETTY_FUNCTION__);
 
     if (_detailWeatherCondition != newDetailItem) {
         _detailWeatherCondition = newDetailItem;

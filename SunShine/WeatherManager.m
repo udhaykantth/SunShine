@@ -7,7 +7,19 @@
 //
 
 #import "WeatherManager.h"
+/*
+ *  weatherDataReceivedNotification
+ *
+ *  Discussion:
+ *    A constant string notification which used when weather data received from server.
+ */
 NSString * const weatherDataReceivedNotification = @"weatherDataReceivedNotification";
+/*
+ *  weatherDataFetchFailedNotification
+ *
+ *  Discussion:
+ *    A constant string notification which used when weather data received failed from server.
+ */
 NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNotification";
 
 
@@ -22,6 +34,7 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
 @end
 
 @implementation WeatherManager
+#pragma mark - Singleton
 
 + (instancetype)sharedWeatherManager {
     static id _sharedWeatherManager = nil;
@@ -43,7 +56,7 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
         _currentCondition  = [[NSMutableArray alloc]init];
         _dailyWeather = [[NSMutableArray alloc] init];
         _hourlyWeather = [[NSMutableArray alloc ]init];
-        _isDailyWeather  = NO;
+        isDailyWeather  = NO;
         //[self fetchCurrentConditions];
 
     }
@@ -60,7 +73,7 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
 }
 -(void)fetchDailyWeatherCondition
 {
-    _isDailyWeather = YES;
+    isDailyWeather = YES;
     //TODO:// dynamic coordinates as parameter
     CLLocationCoordinate2D coordinate;
     coordinate.latitude =17.38;
@@ -70,7 +83,7 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
 }
 -(void)fetchHourlyWeatherCondition
 {
-    _isDailyWeather = NO;
+    isDailyWeather = NO;
     //TODO:// dynamic coordinates as parameter
     CLLocationCoordinate2D coordinate;
     coordinate.latitude =17.38;
@@ -82,14 +95,22 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
 #pragma mark - WeatherClient Delegate Methods
 -(void)didFinishFetchJSONDataFromWeatherURL:(NSMutableArray *)data
 {
-    NSLog(@"Parsed data completely");
+    //NSLog(@"Parsed data completely");
     //_currentCondition = data;
-    if (_isDailyWeather) {
+    if (isDailyWeather) {
+        if (_dailyWeather) {
+            [_dailyWeather removeAllObjects];
+            _dailyWeather = nil;
+        }
         _dailyWeather = data;
 
     }
     else
     {
+        if (_hourlyWeather) {
+            [_hourlyWeather removeAllObjects];
+           _hourlyWeather = nil;
+        }
         _hourlyWeather = data;
     }
      [[NSNotificationCenter defaultCenter] postNotificationName:weatherDataReceivedNotification object:nil];
@@ -99,6 +120,7 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
     [[NSNotificationCenter defaultCenter] postNotificationName:weatherDataFetchFailedNotification object:nil];
 
 }
+
 -(void)clearWeatherData
 {
     if ([_hourlyWeather count ]> 0){

@@ -13,6 +13,8 @@
 ,humidity,temperature,temperatureHigh,temperatureLow,weatherDescription,weatherMain
 ,pressure,seaLevel,groundLevel,windSpeed,windDirection,condition,locationID,base,weatherID,weatherSubID,hourlyDateTime;
 
+#pragma mark -- WeatherCondition class instantiation
+
 - (instancetype)init
 {
     self = [super init];

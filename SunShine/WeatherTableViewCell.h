@@ -7,6 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+/*!
+ @class WeatherTableViewCell
+ WeatherTableViewCell is a sub-class of UITableViewCell, whose objects functions as custom cell.
+ */
 
 @interface WeatherTableViewCell : UITableViewCell
 

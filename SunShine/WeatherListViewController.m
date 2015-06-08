@@ -34,14 +34,30 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"viewDidLoad");
+    //NSLog(@"viewDidLoad");
     self.navigationController.delegate = self;
     //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    [[WeatherManager sharedWeatherManager] fetchDailyWeatherCondition];
     [self addObservers];
+    UIRefreshControl *refresh = [[UIRefreshControl alloc]init];
+    
+    NSDictionary *attributeDict = nil;
+    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:20];
+    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    [style setAlignment:NSTextAlignmentCenter];
+    
+    attributeDict = @{NSUnderlineStyleAttributeName:@(NSUnderlineStyleNone),
+              NSFontAttributeName:font,
+              NSParagraphStyleAttributeName:style};
+    [refresh setAttributedTitle:[[NSAttributedString alloc]initWithString:@"Updating Weather..." attributes:attributeDict]];
+    [refresh setTintColor:[UIColor whiteColor]];
+    [refresh addTarget:self action:@selector(fetchData) forControlEvents:UIControlEventValueChanged];
     
 
+    [self setRefreshControl:refresh];
+    [self fetchData];
     [self configureHeaderView];
+    
+
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -57,14 +73,13 @@
 #pragma mark - Super class methods
 -(void)viewWillLayoutSubviews
 {
-    NSLog(@"viewWillLayoutSubviews");
+    //NSLog(@"viewWillLayoutSubviews");
 
 }
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    NSLog(@"viewWillAppear,topheight:%f", self.topLayoutGuide.length
-);
+    //NSLog(@"viewWillAppear,topheight:%f", self.topLayoutGuide.length);
  
 
 }
@@ -88,13 +103,13 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
      // Return the number of rows in the section.
-    NSLog(@"numberOfRowsInSection count:%lu",(unsigned long)[[WeatherManager sharedWeatherManager].dailyWeather count]);
+    //NSLog(@"numberOfRowsInSection count:%lu",(unsigned long)[[WeatherManager sharedWeatherManager].dailyWeather count]);
     return [[WeatherManager sharedWeatherManager].dailyWeather count]-1;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"cellForRowAtIndexPath");
+    //NSLog(@"cellForRowAtIndexPath");
     
     static NSString *cellIndentifier = @"WeatherTableViewCell";
     WeatherTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIndentifier];
@@ -104,29 +119,10 @@
      ////leave blank for the first row as it is shown in header view
     WeatherCondition *weather = [WeatherManager sharedWeatherManager].dailyWeather[indexPath.row+1];
     [self configureHourlyRowCell:cell weather:weather];
-    
-    
-   /* if (indexPath.section == 0) {
-        if (indexPath.row == 0) {
-            
-           // [self configureHeaderRowCell:cell title:@"Hourly Forecast"];
-//            WeatherCondition *weather = [WeatherManager sharedWeatherManager].dailyWeather[indexPath.row];
-//            [self configureHourlyRowCell:cell weather:weather];
-        }
-        else {
-//            WeatherCondition *weather = [WeatherManager sharedWeatherManager].currentCondition[indexPath.row-1];
-//            [self configureHourlyRowCell:cell weather:weather];
-        }
-    }
-    */
-    
-    // Configure the cell...
-    
-    
     return cell;
 }
 - (void)configureHeaderRowCell:(WeatherTableViewCell *)cell title:(NSString *)title {
-    NSLog(@"[%s]",__PRETTY_FUNCTION__);
+    //NSLog(@"[%s]",__PRETTY_FUNCTION__);
 
     [cell.dayLabel setText:title];
     
@@ -136,14 +132,12 @@
     [cell.temperatureStatusImageView setImage:nil];
 }
 - (void)configureHourlyRowCell:(WeatherTableViewCell *)cell weather:(WeatherCondition *)weather {
-    NSLog(@"[%s],weather data:%@",__PRETTY_FUNCTION__,[weather description]);
+    //NSLog(@"[%s],weather data:%@",__PRETTY_FUNCTION__,[weather description]);
     
     if (weather != nil) {
         [cell.dayLabel setText:weather.day];
-        NSLog(@"currentdate:%@",weather.day);
+        //NSLog(@"currentdate:%@",weather.day);
         [cell.temperatureStatusImageView setImage:[[WeatherUtility sharedWeatherUtility] weatherIconFromString:weather.icon]];
-        //[cell.minTemperatureLabel setText:weather.temperatureLow];
-        //[cell.maxTemperatureLabel setText:weather.temperatureHigh];
         
         [cell.minTemperatureLabel setText:[[WeatherUtility sharedWeatherUtility] stringFromTwoDigitRoundUpDecimal:[weather currentTemperature].minTemperature]];
         [cell.maxTemperatureLabel setText:[[WeatherUtility sharedWeatherUtility] stringFromTwoDigitRoundUpDecimal:[weather currentTemperature].maxTemperature]];
@@ -155,7 +149,7 @@
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 
-    NSLog(@"didSelectRowAtIndexPath");
+    //NSLog(@"didSelectRowAtIndexPath");
     WeatherDetailViewController *weatherDetailViewController = [[WeatherDetailViewController alloc ]init];
     WeatherCondition *detailWeather = [WeatherManager sharedWeatherManager].dailyWeather[indexPath.row+1];
     [weatherDetailViewController setDetailWeatherCondition:detailWeather] ;
@@ -214,15 +208,20 @@
     [self.navigationItem setTitle:@"SunShine"];
     _backgroundImageView = [[UIImageView alloc ]initWithImage:[UIImage imageNamed:@"Sky"]];
     [self.backgroundImageView setContentMode:UIViewContentModeScaleAspectFill];
+
+    self.refreshControl.layer.zPosition = self.tableView.backgroundView.layer.zPosition + 1;
+    ////NSLog(@" after refresh control z position:[%f]", self.refreshControl.layer.zPosition);
+
+
     [self.tableView setBackgroundView:self.backgroundImageView];
     
     _screenHeight = [UIScreen mainScreen].bounds.size.height;
     CGFloat topHeight = self.topLayoutGuide.length;
     
-    NSLog(@"screen bounds:%@ \n topheight:%f",NSStringFromCGRect([UIScreen mainScreen].bounds),topHeight);
+    //NSLog(@"screen bounds:%@ \n topheight:%f",NSStringFromCGRect([UIScreen mainScreen].bounds),topHeight);
     
     _containerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, _screenHeight *0.40)];
-    NSLog(@"_containerView:%@",NSStringFromCGRect(_containerView.frame));
+    //NSLog(@"_containerView:%@",NSStringFromCGRect(_containerView.frame));
     // heights of the labels
     int todayLabelYCoordinate = 44;
     int maxTemperatureLabelYCoordinate = todayLabelYCoordinate+todayLabelYCoordinate;
@@ -316,8 +315,9 @@
 
 -(void)loadWeatherData:(NSNotification*) notifcation
 {
-    NSLog(@"%s",__PRETTY_FUNCTION__);
+    //NSLog(@"%s",__PRETTY_FUNCTION__);
     dispatch_async(dispatch_get_main_queue(), ^{
+        [self stopRefresh];
         [self.tableView reloadData];
         [self updateHeaderView];
 
@@ -325,8 +325,9 @@
 
 }
 -(void)fetchFailed:(NSNotification*)notification {
-    NSLog(@"%s",__PRETTY_FUNCTION__);
+    //NSLog(@"%s",__PRETTY_FUNCTION__);
     dispatch_async(dispatch_get_main_queue(), ^{
+         [self stopRefresh];
          [self showAlert];
         
     });
@@ -356,7 +357,7 @@
          if (weatherIndex == NSNotFound) {
             return nil;
         }
-    NSLog(@"tableViewCellForWeather index:%lu",(unsigned long)weatherIndex);
+    //NSLog(@"tableViewCellForWeather index:%lu",(unsigned long)weatherIndex);
   return  (WeatherTableViewCell*) [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:weatherIndex inSection:0]];
         
     
@@ -371,7 +372,7 @@
     [[NSNotificationCenter defaultCenter]removeObserver:self name:weatherDataFetchFailedNotification object:self];
 
 }
-#pragma mark 
+#pragma mark --Custom methods
 -(void)showAlert {
     
     UIAlertController *errorIssueController = [UIAlertController alertControllerWithTitle:@"Error" message:@"Unable to load data. Connectivity error!" preferredStyle:UIAlertControllerStyleAlert];
@@ -382,4 +383,21 @@
     
 
 }
+-(void)fetchData {
+    //NSLog(@"[%s]",__PRETTY_FUNCTION__);
+    [self.refreshControl beginRefreshing];
+    [[WeatherManager sharedWeatherManager] fetchDailyWeatherCondition];
+    
+
+}
+-(void)stopRefresh {
+    if ([self.refreshControl isRefreshing]) {
+        [self.refreshControl endRefreshing];
+
+    }
+    //NSLog(@"[%s]",__PRETTY_FUNCTION__);
+
+}
+
+
 @end

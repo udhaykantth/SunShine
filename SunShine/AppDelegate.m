@@ -20,10 +20,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
-    
-     
-    
-    //// testing json data
+ 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     WeatherListViewController *listVC = [[WeatherListViewController alloc] init];
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:listVC];

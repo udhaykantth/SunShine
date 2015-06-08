@@ -19,6 +19,7 @@
 @end
 
 @implementation WeatherJsonParser
+#pragma mark -- weatherJsonParser initialzation
 
 -(instancetype)initWithWeatherDataFromJSON:(NSDictionary*)json delegate:(id<WeatherJsonParserDelegate>)delegate;
 {
@@ -32,7 +33,7 @@
 }
 -(void)parseJSON
 {
-    NSLog(@"Parsing...");
+    //NSLog(@"Parsing...");
     [self weatherDataFromJSON:jsonDict];
 }
 
@@ -46,7 +47,7 @@
     NSMutableArray* weatherMutableArray = [NSMutableArray array];
 
     NSNumber *count = [json objectForKey:@"cnt"];
-    NSLog(@"Count is %@",([count integerValue] == 7)? @"daily Weather":@"Hourly Weather");
+    //NSLog(@"Count is %@",([count integerValue] == 7)? @"daily Weather":@"Hourly Weather");
      NSArray *weather = [json objectForKey:@"list"];
     if ([weather count] !=0) {
         for (int i =0; i<[weather count]; i++) {
@@ -57,7 +58,7 @@
             if (!(date < 0)) {
                 // convert interval into date object
                 [weatherData setDay:[[WeatherUtility sharedWeatherUtility]dayFromDateInterval:date]];
-                NSLog(@"WJP date:%@",[[WeatherUtility sharedWeatherUtility]dayFromDateInterval:date]);
+                //NSLog(@"WJP date:%@",[[WeatherUtility sharedWeatherUtility]dayFromDateInterval:date]);
                 
                 
             }
@@ -234,14 +235,7 @@
     }
 }
 
-
-            
-            
-           
-    
-    
-   
-    /* // Weather parsing for the current weather
+   /* // Weather parsing for the current weather
      WeatherCondition* weatherData = [[WeatherCondition alloc]init];
     NSString* base = [json objectForKey:@"base"];
     if ([base length]!= 0 && nil != base) {
@@ -398,8 +392,6 @@
 
     [self.delegate didFinishParsing:weatherArray];
      */
- 
-    
 
 
 @end

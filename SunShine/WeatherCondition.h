@@ -89,6 +89,10 @@ static inline Temperature TemperatureMake(double dayTemperature,
     return aTemperature;
     
 }
+/*!
+ @class WeatherCondition
+ WeatherCondition is a modal class whose objects functions to store weather data .
+ */
 
 @interface WeatherCondition : NSObject
 {
@@ -121,18 +125,10 @@ static inline Temperature TemperatureMake(double dayTemperature,
 @property (nonatomic, strong) NSNumber *windSpeed;
 @property (nonatomic, strong) NSNumber *windDirection;
 @property (nonatomic, strong) NSString *condition;
-@property (nonatomic,strong) NSNumber *locationID;//cityID
-@property (nonatomic,strong) NSString *base;
-@property (nonatomic,strong) NSNumber *weatherID;//weather ID
-@property (nonatomic,strong) NSNumber *weatherSubID;
-@property (nonatomic,strong) NSString *hourlyDateTime;
+@property (nonatomic, strong) NSNumber *locationID;//cityID
+@property (nonatomic, strong) NSString *base;
+@property (nonatomic, strong) NSNumber *weatherID;//weather ID
+@property (nonatomic, strong) NSNumber *weatherSubID;
+@property (nonatomic, strong) NSString *hourlyDateTime;
  
-
-
-
-
-
-
-
-
 @end

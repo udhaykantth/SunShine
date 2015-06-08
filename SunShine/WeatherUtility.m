@@ -13,8 +13,10 @@
 @property(nonatomic,strong)NSDateFormatter *dateFormatter;
 
 @end
+#pragma mark -- weatherUtility singleton
 
 @implementation WeatherUtility
+
 
 + (instancetype)sharedWeatherUtility
 {
@@ -37,6 +39,7 @@
     return self;
 }
 
+#pragma  mark -- Custom methods
 -(UIImage*) weatherIconFromString:(NSString*) iconID {
      NSString *imageName;
    
@@ -118,7 +121,7 @@
     [_numberFormatter setRoundingMode:NSNumberFormatterRoundUp];
 
     NSString *numberString = [NSString stringWithFormat:@"%@°",[_numberFormatter stringFromNumber:decimalNum]];
-    NSLog(@"Result...%@",numberString);
+    //NSLog(@"Result...%@",numberString);
     return numberString;
 }
 -(NSString*)dateStringFromIntervalTime:(NSNumber*) interval {
@@ -142,7 +145,7 @@
     [_numberFormatter setRoundingMode:NSNumberFormatterRoundUp];
     
     NSString *numberString = [NSString stringWithFormat:@"%@°",[_numberFormatter stringFromNumber:number]];
-    NSLog(@"Result...%@",numberString);
+    //NSLog(@"Result...%@",numberString);
     return numberString;
  }
 

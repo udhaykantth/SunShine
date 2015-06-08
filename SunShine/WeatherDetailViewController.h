@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 @class  WeatherCondition;
 
+/*!
+ @class WeatherDetailViewController
+ WeatherDetailViewController is a    view controller which displays the detail weather condition data.
+ */
 @interface WeatherDetailViewController : UIViewController
 @property(nonatomic,strong) WeatherCondition *detailWeatherCondition;
-
-
-
 @end
