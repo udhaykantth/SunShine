@@ -100,7 +100,7 @@
             _humidityValue = [[UILabel alloc]initWithFrame:CGRectMake(halfContainerViewWidth+10, _containerView.bounds.origin.y+ humidityY, halfContainerViewWidth, labelHeight)];
            // [_humidityValue setBackgroundColor:[UIColor whiteColor]];
              [_humidityValue setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
-            [_humidityValue setText:[_detailWeatherCondition.humidity stringValue]];
+            [_humidityValue setText:[NSString stringWithFormat:@"%@ %@",[_detailWeatherCondition.humidity stringValue],@"%"]];
             [_humidityValue setTextAlignment:NSTextAlignmentLeft];
             [_humidityValue setTextColor:[UIColor whiteColor]];
             [_containerView addSubview: _humidityValue];
@@ -118,7 +118,7 @@
             _pressureValue = [[UILabel alloc]initWithFrame:CGRectMake(halfContainerViewWidth+10, _containerView.bounds.origin.y+ pressureY, halfContainerViewWidth, labelHeight)];
           //  [_pressureValue setBackgroundColor:[UIColor whiteColor]];
             [_pressureValue setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
-            [_pressureValue setText:[NSString stringWithFormat:@"%0.f",[_detailWeatherCondition.pressure doubleValue]]];
+            [_pressureValue setText:[NSString stringWithFormat:@"%0.f hPa",[_detailWeatherCondition.pressure doubleValue]]];
             [_pressureValue setTextAlignment:NSTextAlignmentLeft];
             [_pressureValue setTextColor:[UIColor whiteColor]];
             [_containerView addSubview: _pressureValue];
@@ -127,7 +127,7 @@
             _date = [[UILabel alloc]initWithFrame:CGRectMake(_containerView.bounds.origin.x, dateY, halfContainerViewWidth, labelHeight)];
             //[_date setBackgroundColor:[UIColor blackColor]];
             [_date setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
-            [_date setText:@"Date:"];
+            [_date setText:@"Day:"];
             [_date setTextAlignment:NSTextAlignmentRight];
             [_date setTextColor:[UIColor whiteColor]];
             [_containerView addSubview: _date];
@@ -260,7 +260,7 @@
             _speedValue = [[UILabel alloc]initWithFrame:CGRectMake(halfContainerViewWidth+10, _containerView.bounds.origin.y+ speedY, halfContainerViewWidth, labelHeight)];
            // [_speedValue setBackgroundColor:[UIColor whiteColor]];
             [_speedValue setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
-            [_speedValue setText:[_detailWeatherCondition.windSpeed stringValue]];
+            [_speedValue setText:[NSString stringWithFormat:@"%@ %@",[_detailWeatherCondition.windSpeed stringValue],@"km/h"]];
             [_speedValue setTextAlignment:NSTextAlignmentLeft];
             [_speedValue setTextColor:[UIColor whiteColor]];
             [_containerView addSubview: _speedValue];
