@@ -13,6 +13,7 @@
 #import "WeatherListDetailPushAnimator.h"
 #import "WeatherListDetailPopAnimator.h"
 #import "WeatherDetailViewController.h"
+#import "WeatherSettingViewController.h"
 
 #define kCellHeight 65.0
 
@@ -38,6 +39,10 @@
     self.navigationController.delegate = self;
     //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self addObservers];
+    ////
+    
+    
+    ////
     UIRefreshControl *refresh = [[UIRefreshControl alloc]init];
     
     NSDictionary *attributeDict = nil;
@@ -206,6 +211,10 @@
 -(void)configureHeaderView
 {
     [self.navigationItem setTitle:@"SunShine"];
+    
+     UIBarButtonItem *settingItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"Settings.png"] style:UIBarButtonItemStylePlain target:self action:@selector(openSettingView)];
+     [self.navigationItem setRightBarButtonItem:settingItem];
+    
     _backgroundImageView = [[UIImageView alloc ]initWithImage:[UIImage imageNamed:@"Sky"]];
     [self.backgroundImageView setContentMode:UIViewContentModeScaleAspectFill];
 
@@ -216,7 +225,7 @@
     [self.tableView setBackgroundView:self.backgroundImageView];
     
     _screenHeight = [UIScreen mainScreen].bounds.size.height;
-    CGFloat topHeight = self.topLayoutGuide.length;
+    //CGFloat topHeight = self.topLayoutGuide.length;
     
     //NSLog(@"screen bounds:%@ \n topheight:%f",NSStringFromCGRect([UIScreen mainScreen].bounds),topHeight);
     
@@ -398,6 +407,10 @@
     //NSLog(@"[%s]",__PRETTY_FUNCTION__);
 
 }
-
+-(void)openSettingView {
+    WeatherSettingViewController *weatherSettingVC = [[WeatherSettingViewController alloc ]init];
+ 
+    
+}
 
 @end

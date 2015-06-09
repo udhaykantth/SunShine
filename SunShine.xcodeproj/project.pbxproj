@@ -11,7 +11,6 @@
 		6A00ECDA1B1840B100D52A5A /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A00ECD91B1840B100D52A5A /* CoreLocation.framework */; };
 		6A00ECDD1B185C4800D52A5A /* WeatherJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A00ECDC1B185C4800D52A5A /* WeatherJsonParser.m */; };
 		6A07AC701B1C3CB900B6EE5E /* WeatherUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A07AC6F1B1C3CB900B6EE5E /* WeatherUtility.m */; };
-		6A1C9D7C1B25B201000019E3 /* Settings-50.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A1C9D7B1B25B201000019E3 /* Settings-50.png */; };
 		6A52E01F1B2049B900F6A4A7 /* WeatherListDetailPushAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52E01E1B2049B900F6A4A7 /* WeatherListDetailPushAnimator.m */; };
 		6A52E0221B2049CF00F6A4A7 /* WeatherListDetailPopAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52E0211B2049CF00F6A4A7 /* WeatherListDetailPopAnimator.m */; };
 		6A52E0251B20541800F6A4A7 /* WeatherDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A52E0241B20541800F6A4A7 /* WeatherDetailViewController.m */; };
@@ -41,6 +40,9 @@
 		6A72431C1B15DF3900AB50EB /* WeatherTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A72431B1B15DF3900AB50EB /* WeatherTableViewCell.m */; };
 		6AAFECFA1B17199000720AC2 /* WeatherManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAFECF91B17199000720AC2 /* WeatherManager.m */; };
 		6AAFECFD1B1719BE00720AC2 /* WeatherClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AAFECFC1B1719BE00720AC2 /* WeatherClient.m */; };
+		6AF84C631B26F97400E991FD /* Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF84C611B26F97400E991FD /* Settings.png */; };
+		6AF84C641B26F97400E991FD /* Settings@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6AF84C621B26F97400E991FD /* Settings@2x.png */; };
+		6AF84C671B26FA9700E991FD /* WeatherSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AF84C661B26FA9700E991FD /* WeatherSettingViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,7 +63,6 @@
 		6A00ECDC1B185C4800D52A5A /* WeatherJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherJsonParser.m; sourceTree = "<group>"; };
 		6A07AC6E1B1C3CB900B6EE5E /* WeatherUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherUtility.h; sourceTree = "<group>"; };
 		6A07AC6F1B1C3CB900B6EE5E /* WeatherUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherUtility.m; sourceTree = "<group>"; };
-		6A1C9D7B1B25B201000019E3 /* Settings-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Settings-50.png"; sourceTree = "<group>"; };
 		6A52E01D1B2049B900F6A4A7 /* WeatherListDetailPushAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherListDetailPushAnimator.h; sourceTree = "<group>"; };
 		6A52E01E1B2049B900F6A4A7 /* WeatherListDetailPushAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherListDetailPushAnimator.m; sourceTree = "<group>"; };
 		6A52E0201B2049CF00F6A4A7 /* WeatherListDetailPopAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherListDetailPopAnimator.h; sourceTree = "<group>"; };
@@ -103,6 +104,10 @@
 		6AAFECF91B17199000720AC2 /* WeatherManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherManager.m; sourceTree = "<group>"; };
 		6AAFECFB1B1719BE00720AC2 /* WeatherClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherClient.h; sourceTree = "<group>"; };
 		6AAFECFC1B1719BE00720AC2 /* WeatherClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherClient.m; sourceTree = "<group>"; };
+		6AF84C611B26F97400E991FD /* Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Settings.png; sourceTree = "<group>"; };
+		6AF84C621B26F97400E991FD /* Settings@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Settings@2x.png"; sourceTree = "<group>"; };
+		6AF84C651B26FA9700E991FD /* WeatherSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeatherSettingViewController.h; sourceTree = "<group>"; };
+		6AF84C661B26FA9700E991FD /* WeatherSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WeatherSettingViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,7 +204,8 @@
 		6A7242BC1B15928600AB50EB /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				6A1C9D7B1B25B201000019E3 /* Settings-50.png */,
+				6AF84C611B26F97400E991FD /* Settings.png */,
+				6AF84C621B26F97400E991FD /* Settings@2x.png */,
 				6A7242E61B15A19200AB50EB /* Sky.png */,
 				6A7242BD1B15928600AB50EB /* art_clear.png */,
 				6A7242BE1B15928600AB50EB /* art_clouds.png */,
@@ -229,6 +235,8 @@
 				6A7242E11B1592C100AB50EB /* WeatherListViewController.m */,
 				6A52E0231B20541800F6A4A7 /* WeatherDetailViewController.h */,
 				6A52E0241B20541800F6A4A7 /* WeatherDetailViewController.m */,
+				6AF84C651B26FA9700E991FD /* WeatherSettingViewController.h */,
+				6AF84C661B26FA9700E991FD /* WeatherSettingViewController.m */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -352,11 +360,12 @@
 				6A7242A41B15922800AB50EB /* Images.xcassets in Resources */,
 				6A7242D61B15928600AB50EB /* ic_clear.png in Resources */,
 				6A7242D41B15928600AB50EB /* art_snow.png in Resources */,
-				6A1C9D7C1B25B201000019E3 /* Settings-50.png in Resources */,
+				6AF84C631B26F97400E991FD /* Settings.png in Resources */,
 				6A7242CF1B15928600AB50EB /* art_clouds.png in Resources */,
 				6A7242DB1B15928600AB50EB /* ic_logo.png in Resources */,
 				6A7242CE1B15928600AB50EB /* art_clear.png in Resources */,
 				6A7242DE1B15928600AB50EB /* ic_storm.png in Resources */,
+				6AF84C641B26F97400E991FD /* Settings@2x.png in Resources */,
 				6A7242DA1B15928600AB50EB /* ic_light_rain.png in Resources */,
 				6A7242D11B15928600AB50EB /* art_light_clouds.png in Resources */,
 			);
@@ -376,6 +385,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AF84C671B26FA9700E991FD /* WeatherSettingViewController.m in Sources */,
 				6A00ECD81B18404400D52A5A /* WeatherCondition.m in Sources */,
 				6A72431C1B15DF3900AB50EB /* WeatherTableViewCell.m in Sources */,
 				6A52E01F1B2049B900F6A4A7 /* WeatherListDetailPushAnimator.m in Sources */,
