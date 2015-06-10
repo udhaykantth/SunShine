@@ -409,8 +409,15 @@
 }
 -(void)openSettingView {
     WeatherSettingViewController *weatherSettingVC = [[WeatherSettingViewController alloc ]init];
- 
+    [weatherSettingVC setDelegate:self];
+    [weatherSettingVC setModalPresentationStyle:UIModalPresentationPopover];
+    UINavigationController *naviController = [[UINavigationController alloc]initWithRootViewController:weatherSettingVC];
+     [self presentViewController:naviController animated:YES completion:nil];
+  
     
+}
+-(void)dissmissViewContorller {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

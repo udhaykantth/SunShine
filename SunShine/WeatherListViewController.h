@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WeatherSettingViewController.h"
 @class  WeatherTableViewCell;
 @class  WeatherCondition;
 /*!
@@ -14,7 +15,7 @@
  WeatherListViewController is a  table view controller which list the weather data,animate on select the cell(Push or pop),refreshes the data by pulling the list view.
  */
 
-@interface WeatherListViewController : UITableViewController<UINavigationControllerDelegate>
+@interface WeatherListViewController : UITableViewController<UINavigationControllerDelegate,WeatherSettingViewControllerDelegate>
 
 /*!
  @method tableViewCellForWeather

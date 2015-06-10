@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WeatherSettingViewController : UIViewController
+
+@protocol WeatherSettingViewControllerDelegate <NSObject>
+
+-(void)dissmissViewContorller;
+
+@end
+
+@interface WeatherSettingViewController : UIViewController<UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate>
+@property(nonatomic,weak)id<WeatherSettingViewControllerDelegate> delegate;
 
 @end
