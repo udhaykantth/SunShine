@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "WeatherListViewController.h"
+#import "WeatherShared.h"
 
 
 
@@ -25,8 +26,7 @@
     WeatherListViewController *listVC = [[WeatherListViewController alloc] init];
     
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:listVC];
-    NSLog(@"-[%@ %@]", [self class], NSStringFromSelector(_cmd));
-
+    PRINT_CONSOLE_LOG;
     
     //[self.navigationController.navigationBar setBarTintColor:[UIColor yellowColor]];
     /*

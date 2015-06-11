@@ -14,8 +14,7 @@
 #import "WeatherListDetailPopAnimator.h"
 #import "WeatherDetailViewController.h"
 #import "WeatherSettingViewController.h"
-
-#define kCellHeight 65.0
+#import "WeatherShared.h"
 
 
 @interface WeatherListViewController ()
@@ -34,6 +33,7 @@
 @implementation WeatherListViewController
 
 - (void)viewDidLoad {
+    PRINT_CONSOLE_LOG;
     [super viewDidLoad];
     //NSLog(@"viewDidLoad");
     self.navigationController.delegate = self;
@@ -78,15 +78,19 @@
 #pragma mark - Super class methods
 -(void)viewWillLayoutSubviews
 {
-    //NSLog(@"viewWillLayoutSubviews");
-
+    PRINT_CONSOLE_LOG;
 }
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     //NSLog(@"viewWillAppear,topheight:%f", self.topLayoutGuide.length);
- 
+    PRINT_CONSOLE_LOG;
+     
 
+}
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    PRINT_CONSOLE_LOG;
 }
 -(void)dealloc
 {
@@ -393,8 +397,8 @@
 
 }
 -(void)fetchData {
-    //NSLog(@"[%s]",__PRETTY_FUNCTION__);
-    [self.refreshControl beginRefreshing];
+    PRINT_CONSOLE_LOG;
+     [self.refreshControl beginRefreshing];
     [[WeatherManager sharedWeatherManager] fetchDailyWeatherCondition];
     
 
@@ -416,7 +420,16 @@
   
     
 }
--(void)dissmissViewContorller {
+-(void)dissmissViewContorller:(NSMutableDictionary *)selectedData {
+    PRINT_CONSOLE_LOG;
+    if (selectedData != nil) {
+        NSLog(@"selected data received:%@",[selectedData description]);
+        [[WeatherManager sharedWeatherManager] setMetric:[selectedData objectForKey:UNITS]];
+        [[WeatherManager sharedWeatherManager] setCityName:[selectedData objectForKey:LOCATION_NAME]];
+        [self fetchData];
+
+        
+    }
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

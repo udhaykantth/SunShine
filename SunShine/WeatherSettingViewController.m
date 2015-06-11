@@ -7,15 +7,19 @@
 //
 
 #import "WeatherSettingViewController.h"
-#define UNITS @"UNITS"
-#define LOCATION_NAME @"LOCATION"
+#import "WeatherShared.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface WeatherSettingViewController ()
+{
+
+    BOOL isDisableDoneButton;
+}
 @property(nonatomic,strong) UIView *containerView;
 @property(nonatomic,strong) UILabel *location;
 @property(nonatomic,strong) UITextField *locationValue;
 @property(nonatomic,strong) UILabel *temperatureUnits;
-@property(nonatomic,strong)  UIButton *temperatureUnitsValue;
+@property(nonatomic,strong)  UITextField *temperatureUnitsValue;
 @property(nonatomic,strong) UIPickerView *unitsPickerView;
 @property(nonatomic,strong) NSArray *pickerViewData;
 @property(nonatomic,strong) NSMutableDictionary *selectedData;
@@ -27,6 +31,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    isDisableDoneButton = YES;
+    PRINT_CONSOLE_LOG;
     // Do any additional setup after loading the view.
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
     UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
@@ -35,6 +41,11 @@
     [self.navigationItem setLeftBarButtonItem:cancelItem];
     _selectedData = [[NSMutableDictionary alloc]init];
     [self configureView];
+}
+-(void)viewWillDisappear:(BOOL)animated {
+    PRINT_CONSOLE_LOG;
+    [super viewWillDisappear:animated];
+   // [self dismissKeyboard];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -46,10 +57,12 @@
     int mainViewHeight = self.view.bounds.size.height;
     int mainViewWidth = self.view.bounds.size.width;
     int mainViewX = self.view.bounds.origin.x;
-    int mainViewY = self.view.bounds.origin.y;
+    //int mainViewY = self.view.bounds.origin.y;
     int labelHeight = 30;
     
     int containViewY = 150.0;
+    
+    //Container view
     _containerView = [[UIView alloc]initWithFrame:CGRectMake( mainViewX, containViewY, mainViewWidth, mainViewHeight-mainViewX-200)];
     [_containerView setBackgroundColor:[UIColor whiteColor]];
     
@@ -61,15 +74,19 @@
     [_location setTextColor:[UIColor blackColor]];
     [_containerView addSubview: _location];
     
-    _locationValue = [[UITextField alloc]initWithFrame:CGRectMake(mainViewWidth/2+10, _containerView.bounds.origin.y, mainViewWidth/2, 50)];
+    //location value textfield
+    _locationValue = [[UITextField alloc]initWithFrame:CGRectMake(mainViewWidth/2+10, _containerView.bounds.origin.y, mainViewWidth/2-15, 50)];
     [_locationValue setPlaceholder:@"Location value"];
     [_locationValue setDelegate:self];
     [_locationValue setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
     [_locationValue setTextAlignment:NSTextAlignmentLeft];
     [_locationValue setTextColor:[UIColor blackColor]];
+    [_locationValue setTag:LOCATION_TEXTFIELD_TAG];
+    [_locationValue becomeFirstResponder];
+   
     [_containerView addSubview: _locationValue];
     
-    int temperatureUnitY = _location.frame.origin.y+_location.frame.size.height+10;
+    int temperatureUnitY = _location.frame.origin.y+_location.frame.size.height+20;
     
     _temperatureUnits = [[UILabel alloc]initWithFrame:CGRectMake(_containerView.bounds.origin.x, temperatureUnitY, mainViewWidth/2, labelHeight)];
     [_temperatureUnits setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
@@ -80,85 +97,127 @@
     
     
     
-    _temperatureUnitsValue = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_temperatureUnitsValue setFrame:CGRectMake(mainViewWidth/2+10, temperatureUnitY+3, mainViewWidth/2, 25)];
+    _temperatureUnitsValue = [[UITextField alloc]initWithFrame:CGRectMake(mainViewWidth/2+10,temperatureUnitY, mainViewWidth/2-15, labelHeight)];
+    [_temperatureUnitsValue setPlaceholder:@"None"];
+    [_temperatureUnitsValue setDelegate:self];
+    [_temperatureUnitsValue setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
+    [_temperatureUnitsValue setTextAlignment:NSTextAlignmentLeft];
+    [_temperatureUnitsValue setTextColor:[UIColor blackColor]];
+    [_temperatureUnitsValue setTag:UNITS_TEXTFIELD_TAG];
     
-//    NSDictionary *attributeDict = nil;
-//    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
-//    NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-//    [style setAlignment:NSTextAlignmentLeft];
-//    
-//    attributeDict = @{NSUnderlineStyleAttributeName:@(NSUnderlineStyleNone),
-//                      NSFontAttributeName:font,
-//                      NSParagraphStyleAttributeName:style};
-//    
-//    [_temperatureUnitsValue setAttributedTitle:[[NSAttributedString alloc]initWithString:@"united states of america" attributes:attributeDict] forState:UIControlStateNormal];
-     //[_temperatureUnitsValue setTitleColor:[UIColor greenColor] forState:UIControlStateNormal];
-    [_temperatureUnitsValue addTarget:self action:@selector(unitTemperature:) forControlEvents:UIControlEventTouchUpInside];
-    //[_temperatureUnitsValue setBackgroundColor:[UIColor blackColor]];
-    [_temperatureUnitsValue setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
-    //[_temperatureUnitsValue setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
-    [_containerView addSubview: _temperatureUnitsValue];
+    UIToolbar *toolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
+    UIBarButtonItem *doneBarButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(dismissPickerView:)];
     
-    _pickerViewData = [NSArray arrayWithObjects:@"None",@"Metric",@"Imperial", nil];
-
+    UIBarButtonItem *spaceBar = [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
+    [toolBar setItems:[NSArray arrayWithObjects:spaceBar, doneBarButton,nil]];
     
+    [_temperatureUnitsValue setInputAccessoryView:toolBar];
     
-    [self.view addSubview:_containerView];
-    
-
-}
--(void)unitTemperature:(id)sender {
-    NSLog(@"sender is:%@",(UIButton*)[sender titleLabel].text);
     if (_unitsPickerView == nil) {
-        CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
-        //CGFloat pickerViewWidth = screenWidth *3/4;
+        //CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
         
         _unitsPickerView = [[UIPickerView alloc]init];
         [_unitsPickerView setDataSource:self];
         [_unitsPickerView setDelegate:self];
-        [_unitsPickerView setFrame:CGRectMake(0, screenWidth/2-40, screenWidth, screenWidth/2)];
+        //[_unitsPickerView setFrame:CGRectMake(0, screenWidth/2-40, screenWidth, (screenWidth/2)-20)];
         NSLog(@"pickerFrame:%@",NSStringFromCGRect(_unitsPickerView.frame));
-        [_containerView addSubview: _unitsPickerView];
-
+        [_temperatureUnitsValue setInputView:_unitsPickerView];
+        
     }
- 
+    [_containerView addSubview:_temperatureUnitsValue];
+    
+    _pickerViewData = [NSArray arrayWithObjects:@"None",@"Metric",@"Imperial", nil];
+
+    [self.view addSubview:_containerView];
+    
 }
 
 -(void)done:(id)sender
 {
-    NSLog(@"[%@ %@]",[self class],NSStringFromSelector(_cmd));
-    if ([_locationValue isFirstResponder]) {
-        [_locationValue resignFirstResponder];
+    PRINT_CONSOLE_LOG;
+    [self dismissKeyboard];
+    if ([_locationValue.text length] == 0 || [_temperatureUnitsValue.text length] == 0 || [_temperatureUnitsValue.text isEqualToString:@"None"]) {
+        [self.delegate dissmissViewContorller:nil];
+        return;
+  
     }
+    [_selectedData setObject:_locationValue.text forKey:LOCATION_NAME];
+    [_selectedData setObject:_temperatureUnitsValue.text forKey:UNITS];
     
-    [self.delegate dissmissViewContorller];
+    [self.delegate dissmissViewContorller:_selectedData];
 }
 -(void)cancel:(id) sender{
-    NSLog(@"[%@ %@]",[self class],NSStringFromSelector(_cmd));
-    if ([_locationValue isFirstResponder]) {
-        [_locationValue resignFirstResponder];
-    }
+    PRINT_CONSOLE_LOG;
+    [self dismissKeyboard];
 
-    [self.delegate dissmissViewContorller];
+    [self.delegate dissmissViewContorller:nil];
 
 }
 
 #pragma mark-- UITextField Delegate.
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     return YES;
-}       // return NO to disallow editing.
+}
+// return NO to disallow editing.
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     NSLog(@"textFieldDidBeginEditing:%@",textField.text);
-    [_unitsPickerView removeFromSuperview];
+    [textField becomeFirstResponder];
+    
 
-}           // became first responder
+}
+// became first responder
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    NSLog(@"textFieldShouldEndEditing");
-    [textField resignFirstResponder];
+    NSLog(@"textFieldShouldEndEditing :%@,%@",[_locationValue class], [_temperatureUnitsValue class]);
+    
+        if(textField.tag == LOCATION_TEXTFIELD_TAG) {
+            if ([textField.text length ]==0) {
+                
+            textField.layer.borderColor =  ([[UIColor redColor] CGColor]);
+            textField.layer.borderWidth = 1.0;
+                NSLog(@"cannot be empty");
+                isDisableDoneButton = YES;
+               // [self.navigationItem.rightBarButtonItem setEnabled:NO];
 
-    return YES;
+               // return NO;//weired
+
+            }
+            else {
+                textField.layer.borderColor =  ([[UIColor whiteColor] CGColor]);
+                textField.layer.borderWidth = 1.0;
+                [textField resignFirstResponder];
+                isDisableDoneButton = NO;
+                //[self.navigationItem.rightBarButtonItem setEnabled:YES];
+
+
+            }
+        }
+        else if (textField.tag == UNITS_TEXTFIELD_TAG) {
+             if ([textField.text length ]== 0 || [_temperatureUnitsValue.text isEqualToString:@"None"]) {
+            textField.layer.borderColor =  ([[UIColor redColor] CGColor]);
+            textField.layer.borderWidth = 1.0;
+                 NSLog(@"cannot be empty");
+                 isDisableDoneButton = YES;
+                 //[self.navigationItem.rightBarButtonItem setEnabled:NO];
+
+
+                // return NO;
+
+             }
+             else {
+                 textField.layer.borderColor =  ([[UIColor whiteColor] CGColor]);
+                 textField.layer.borderWidth = 1.0;
+                 [textField resignFirstResponder];
+                 isDisableDoneButton = NO;
+                 //[self.navigationItem.rightBarButtonItem setEnabled:YES];
+
+
+             
+             }
+        }
+    [self.navigationItem.rightBarButtonItem setEnabled:!isDisableDoneButton];
+ 
+return YES;
 }
 // return YES to allow editing to stop and to resign first responder status. NO to disallow the editing session to end
 
@@ -201,8 +260,7 @@
     NSLog(@"didSelectRow :%@",[_pickerViewData objectAtIndex:row]);
     if (_selectedData) {
        NSString *units  = [_pickerViewData objectAtIndex:row];
-        [_temperatureUnitsValue setTitle:units forState:UIControlStateNormal];
-        NSDictionary *attributeDict = nil;
+         NSDictionary *attributeDict = nil;
         UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
         NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
         [style setAlignment:NSTextAlignmentLeft];
@@ -211,12 +269,27 @@
                           NSFontAttributeName:font,
                           NSParagraphStyleAttributeName:style};
         
-        [_temperatureUnitsValue setAttributedTitle:[[NSAttributedString alloc]initWithString:units attributes:attributeDict] forState:UIControlStateNormal];
+         [_temperatureUnitsValue setAttributedText:[[NSAttributedString alloc]initWithString:units attributes:attributeDict]];
         
         [_selectedData setObject:units forKey:UNITS];
     }
 }
+-(void)dismissPickerView:(id)sender {
 
+    if ([_temperatureUnitsValue isFirstResponder]) {
+        [_temperatureUnitsValue resignFirstResponder];
+   
+    }
+
+}
+-(void)dismissKeyboard {
+    if ([_temperatureUnitsValue isFirstResponder]) {
+        [_temperatureUnitsValue resignFirstResponder];
+    }
+    if ([_locationValue isFirstResponder]) {
+        [_locationValue resignFirstResponder];
+    }
+}
 /*
 #pragma mark - Navigation
 

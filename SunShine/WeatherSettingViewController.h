@@ -11,7 +11,7 @@
 
 @protocol WeatherSettingViewControllerDelegate <NSObject>
 
--(void)dissmissViewContorller;
+-(void)dissmissViewContorller:(NSMutableDictionary*)selectedData;
 
 @end
 

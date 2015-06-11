@@ -69,7 +69,8 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
     CLLocationCoordinate2D coordinate;
     coordinate.latitude =17.38;
     coordinate.longitude = 78.47;
-    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeCurrent];
+    
+    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeCurrent metrics:_metric];
 }
 -(void)fetchDailyWeatherCondition
 {
@@ -78,7 +79,7 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
     CLLocationCoordinate2D coordinate;
     coordinate.latitude =17.38;
     coordinate.longitude = 78.47;
-    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeDaily];
+    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeDaily metrics:_metric];
 
 }
 -(void)fetchHourlyWeatherCondition
@@ -88,7 +89,7 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
     CLLocationCoordinate2D coordinate;
     coordinate.latitude =17.38;
     coordinate.longitude = 78.47;
-    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeHourly];
+    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeHourly metrics:_metric];
 
 }
 

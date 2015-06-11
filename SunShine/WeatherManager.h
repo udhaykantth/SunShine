@@ -30,6 +30,10 @@ extern NSString * const weatherDataFetchFailedNotification;
 @property (nonatomic,strong)  NSMutableArray* currentCondition;
 @property (nonatomic, strong, readwrite) NSMutableArray  *dailyWeather;
 @property (nonatomic, strong, readwrite) NSMutableArray   *hourlyWeather;
+@property (nonatomic,strong)  NSString *metric;
+@property (nonatomic,strong)  NSString *cityName;
+
+
 
 /*!
  @method fetchCurrentConditions
