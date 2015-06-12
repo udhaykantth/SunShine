@@ -13,7 +13,7 @@
 @interface WeatherSettingViewController ()
 {
 
-    BOOL isDisableDoneButton;
+    BOOL isEnableDoneButton;
 }
 @property(nonatomic,strong) UIView *containerView;
 @property(nonatomic,strong) UILabel *location;
@@ -31,8 +31,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    isDisableDoneButton = YES;
-    PRINT_CONSOLE_LOG;
+     PRINT_CONSOLE_LOG;
     // Do any additional setup after loading the view.
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
     UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
@@ -54,6 +53,9 @@
 }
 -(void)configureView {
     [self.view setBackgroundColor:[UIColor colorWithRed:74.0/255.0 green:144.0/255.0 blue:226.0/255.0 alpha:1.0]];
+    
+    [self showOrHideDoneBarButton];
+ 
     int mainViewHeight = self.view.bounds.size.height;
     int mainViewWidth = self.view.bounds.size.width;
     int mainViewX = self.view.bounds.origin.x;
@@ -162,9 +164,10 @@
 // return NO to disallow editing.
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     NSLog(@"textFieldDidBeginEditing:%@",textField.text);
+    
+    [self showOrHideDoneBarButton];
     [textField becomeFirstResponder];
     
-
 }
 // became first responder
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
@@ -176,19 +179,13 @@
             textField.layer.borderColor =  ([[UIColor redColor] CGColor]);
             textField.layer.borderWidth = 1.0;
                 NSLog(@"cannot be empty");
-                isDisableDoneButton = YES;
-               // [self.navigationItem.rightBarButtonItem setEnabled:NO];
-
-               // return NO;//weired
-
-            }
+                 // return NO;//weired
+             }
             else {
                 textField.layer.borderColor =  ([[UIColor whiteColor] CGColor]);
                 textField.layer.borderWidth = 1.0;
                 [textField resignFirstResponder];
-                isDisableDoneButton = NO;
-                //[self.navigationItem.rightBarButtonItem setEnabled:YES];
-
+  
 
             }
         }
@@ -197,26 +194,16 @@
             textField.layer.borderColor =  ([[UIColor redColor] CGColor]);
             textField.layer.borderWidth = 1.0;
                  NSLog(@"cannot be empty");
-                 isDisableDoneButton = YES;
-                 //[self.navigationItem.rightBarButtonItem setEnabled:NO];
-
-
-                // return NO;
+                  // return NO;
 
              }
              else {
                  textField.layer.borderColor =  ([[UIColor whiteColor] CGColor]);
                  textField.layer.borderWidth = 1.0;
                  [textField resignFirstResponder];
-                 isDisableDoneButton = NO;
-                 //[self.navigationItem.rightBarButtonItem setEnabled:YES];
-
-
-             
              }
         }
-    [self.navigationItem.rightBarButtonItem setEnabled:!isDisableDoneButton];
- 
+  
 return YES;
 }
 // return YES to allow editing to stop and to resign first responder status. NO to disallow the editing session to end
@@ -228,6 +215,15 @@ return YES;
     [textField resignFirstResponder];
     return YES;
 }
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSLog(@"shouldChangeCharactersInRange:%@",string);
+    [self showOrHideDoneBarButton];
+
+    return YES;
+    
+}
+
+
 #pragma mark - UIPickerViewDataSource
 
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
@@ -272,6 +268,8 @@ return YES;
          [_temperatureUnitsValue setAttributedText:[[NSAttributedString alloc]initWithString:units attributes:attributeDict]];
         
         [_selectedData setObject:units forKey:UNITS];
+        [self showOrHideDoneBarButton];
+        
     }
 }
 -(void)dismissPickerView:(id)sender {
@@ -289,6 +287,16 @@ return YES;
     if ([_locationValue isFirstResponder]) {
         [_locationValue resignFirstResponder];
     }
+}
+-(void)showOrHideDoneBarButton {
+    if ([_temperatureUnitsValue.text length] > 0 && [_locationValue.text length] > 0) {
+        isEnableDoneButton = YES;
+    }
+    else
+    { isEnableDoneButton = NO;
+    }
+    [self.navigationItem.rightBarButtonItem setEnabled:isEnableDoneButton];
+    
 }
 /*
 #pragma mark - Navigation
