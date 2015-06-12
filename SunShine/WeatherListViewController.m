@@ -33,16 +33,12 @@
 @implementation WeatherListViewController
 
 - (void)viewDidLoad {
-    PRINT_CONSOLE_LOG;
+    PRINT_CONSOLE_LOG(nil);
     [super viewDidLoad];
-    //NSLog(@"viewDidLoad");
-    self.navigationController.delegate = self;
+     self.navigationController.delegate = self;
     //[self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self addObservers];
-    ////
     
-    
-    ////
     UIRefreshControl *refresh = [[UIRefreshControl alloc]init];
     
     NSDictionary *attributeDict = nil;
@@ -78,19 +74,18 @@
 #pragma mark - Super class methods
 -(void)viewWillLayoutSubviews
 {
-    PRINT_CONSOLE_LOG;
+    PRINT_CONSOLE_LOG(nil);
 }
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    //NSLog(@"viewWillAppear,topheight:%f", self.topLayoutGuide.length);
-    PRINT_CONSOLE_LOG;
+     PRINT_CONSOLE_LOG(nil);
      
 
 }
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    PRINT_CONSOLE_LOG;
+    PRINT_CONSOLE_LOG(nil);
 }
 -(void)dealloc
 {
@@ -112,8 +107,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
      // Return the number of rows in the section.
-    //NSLog(@"numberOfRowsInSection count:%lu",(unsigned long)[[WeatherManager sharedWeatherManager].dailyWeather count]);
-    return [[WeatherManager sharedWeatherManager].dailyWeather count]-1;
+     return [[WeatherManager sharedWeatherManager].dailyWeather count]-1;
 }
 
 
@@ -321,6 +315,18 @@
     [_minTemperatureLabel setText:[[WeatherUtility sharedWeatherUtility] stringFromTwoDigitRoundUpDecimal:[weather currentTemperature].minTemperature]];
     [_statusTemperatureLabel setText:weather.weatherMain];
     [_temperatureImageView setImage:[[WeatherUtility sharedWeatherUtility] weatherArtFromString:weather.icon]];
+    //save into the weathermanager, units and location name.
+     NSString *units = [[NSUserDefaults standardUserDefaults]objectForKey:UNITS_PREFERENCE];
+    if ([units length] > 0) {
+        [[WeatherManager sharedWeatherManager]setMetric:units];
+        
+    }
+    else {
+        [[WeatherManager sharedWeatherManager]setMetric:DEFAULT_UNIT];//By default
+    }
+    [[WeatherManager sharedWeatherManager] setCityName:weather.locationName];//existing location name
+
+    
 
 
 }
@@ -397,7 +403,7 @@
 
 }
 -(void)fetchData {
-    PRINT_CONSOLE_LOG;
+    PRINT_CONSOLE_LOG(nil);
      [self.refreshControl beginRefreshing];
     [[WeatherManager sharedWeatherManager] fetchDailyWeatherCondition];
     
@@ -414,6 +420,12 @@
 -(void)openSettingView {
     WeatherSettingViewController *weatherSettingVC = [[WeatherSettingViewController alloc ]init];
     [weatherSettingVC setDelegate:self];
+    WeatherManager *weatherMgr = [WeatherManager sharedWeatherManager];
+    if ([weatherMgr.metric length] > 0 || [weatherMgr.cityName length] > 0) {
+        NSDictionary *selectedDataDict = [NSDictionary dictionaryWithObjectsAndKeys:weatherMgr.metric,UNITS,weatherMgr.cityName,LOCATION_NAME, nil];
+        [weatherSettingVC setExistingSelectedData:selectedDataDict];
+        
+    }
     [weatherSettingVC setModalPresentationStyle:UIModalPresentationPopover];
     UINavigationController *naviController = [[UINavigationController alloc]initWithRootViewController:weatherSettingVC];
      [self presentViewController:naviController animated:YES completion:nil];
@@ -421,10 +433,9 @@
     
 }
 -(void)dissmissViewContorller:(NSMutableDictionary *)selectedData {
-    PRINT_CONSOLE_LOG;
+    PRINT_CONSOLE_LOG([selectedData description]);
     if (selectedData != nil) {
-        NSLog(@"selected data received:%@",[selectedData description]);
-        [[WeatherManager sharedWeatherManager] setMetric:[selectedData objectForKey:UNITS]];
+         [[WeatherManager sharedWeatherManager] setMetric:[selectedData objectForKey:UNITS]];
         [[WeatherManager sharedWeatherManager] setCityName:[selectedData objectForKey:LOCATION_NAME]];
         [self fetchData];
 

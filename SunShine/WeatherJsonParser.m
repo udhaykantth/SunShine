@@ -60,11 +60,7 @@
                 [weatherData setDay:[[WeatherUtility sharedWeatherUtility]dayFromDateInterval:date]];
                 //NSLog(@"WJP date:%@",[[WeatherUtility sharedWeatherUtility]dayFromDateInterval:date]);
                 
-                
             }
-            
-           
-            
             //hourly weather
             if ([count intValue] > 7) {
                 

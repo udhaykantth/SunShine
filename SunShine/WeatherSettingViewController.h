@@ -17,5 +17,6 @@
 
 @interface WeatherSettingViewController : UIViewController<UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate>
 @property(nonatomic,weak)id<WeatherSettingViewControllerDelegate> delegate;
+@property(nonatomic,strong) NSDictionary* existingSelectedData;
 
 @end

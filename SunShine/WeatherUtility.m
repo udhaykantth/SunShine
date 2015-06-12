@@ -121,8 +121,7 @@
     [_numberFormatter setRoundingMode:NSNumberFormatterRoundUp];
 
     NSString *numberString = [NSString stringWithFormat:@"%@°",[_numberFormatter stringFromNumber:decimalNum]];
-    //NSLog(@"Result...%@",numberString);
-    return numberString;
+     return numberString;
 }
 -(NSString*)dateStringFromIntervalTime:(NSNumber*) interval {
  
@@ -133,8 +132,7 @@
 -(NSString*)dayFromDateInterval:(NSNumber*) interval {
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:[interval doubleValue]];
     [_dateFormatter setDateFormat:@"EEEE"];
-    //return  [NSString stringWithFormat:@"Today, %@",[_dateFormatter stringFromDate:date]];
-    return  [_dateFormatter stringFromDate:date];
+     return  [_dateFormatter stringFromDate:date];
 
 }
 -(NSString*)stringFromTwoDigitRoundUpDecimal:(double)decimal
@@ -145,8 +143,7 @@
     [_numberFormatter setRoundingMode:NSNumberFormatterRoundUp];
     
     NSString *numberString = [NSString stringWithFormat:@"%@°",[_numberFormatter stringFromNumber:number]];
-    //NSLog(@"Result...%@",numberString);
-    return numberString;
+     return numberString;
  }
 
 @end

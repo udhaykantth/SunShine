@@ -70,7 +70,7 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
     coordinate.latitude =17.38;
     coordinate.longitude = 78.47;
     
-    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeCurrent metrics:_metric];
+    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeCurrent units:_metric];
 }
 -(void)fetchDailyWeatherCondition
 {
@@ -79,7 +79,7 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
     CLLocationCoordinate2D coordinate;
     coordinate.latitude =17.38;
     coordinate.longitude = 78.47;
-    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeDaily metrics:_metric];
+    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeDaily units:_metric];
 
 }
 -(void)fetchHourlyWeatherCondition
@@ -89,13 +89,14 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
     CLLocationCoordinate2D coordinate;
     coordinate.latitude =17.38;
     coordinate.longitude = 78.47;
-    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeHourly metrics:_metric];
+    [self.client fetchJSONDataFromCoordinates:coordinate type:WeatherConditionTypeHourly units:_metric];
 
 }
 
 #pragma mark - WeatherClient Delegate Methods
 -(void)didFinishFetchJSONDataFromWeatherURL:(NSMutableArray *)data
 {
+    
     //NSLog(@"Parsed data completely");
     //_currentCondition = data;
     if (isDailyWeather) {
@@ -131,5 +132,8 @@ NSString * const weatherDataFetchFailedNotification = @"weatherDataFetchFailedNo
         [_dailyWeather removeAllObjects];
         
     }
+}
+- (void)findMyLocation {
+
 }
 @end

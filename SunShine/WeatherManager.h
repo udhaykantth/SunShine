@@ -33,6 +33,8 @@ extern NSString * const weatherDataFetchFailedNotification;
 @property (nonatomic,strong)  NSString *metric;
 @property (nonatomic,strong)  NSString *cityName;
 
+- (void)findMyLocation;
+
 
 
 /*!

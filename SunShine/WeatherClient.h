@@ -66,7 +66,7 @@ typedef NS_OPTIONS(NSUInteger, WeatherConditionType) {
  */
 @interface WeatherClient : NSObject<WeatherJsonParserDelegate>
 @property(nonatomic,weak)id<WeatherClientDelegate> clientDelegate;
-- (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate type:(WeatherConditionType)WeatherconditionType metrics:(NSString*)metric;
+- (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate type:(WeatherConditionType)WeatherconditionType units:(NSString*)units;
 
 
 @end

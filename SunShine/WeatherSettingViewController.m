@@ -31,7 +31,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-     PRINT_CONSOLE_LOG;
+     PRINT_CONSOLE_LOG(nil);
     // Do any additional setup after loading the view.
     UIBarButtonItem *doneItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
     UIBarButtonItem *cancelItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancel:)];
@@ -42,7 +42,7 @@
     [self configureView];
 }
 -(void)viewWillDisappear:(BOOL)animated {
-    PRINT_CONSOLE_LOG;
+    PRINT_CONSOLE_LOG(nil);
     [super viewWillDisappear:animated];
    // [self dismissKeyboard];
 }
@@ -52,7 +52,7 @@
     // Dispose of any resources that can be recreated.
 }
 -(void)configureView {
-    [self.view setBackgroundColor:[UIColor colorWithRed:74.0/255.0 green:144.0/255.0 blue:226.0/255.0 alpha:1.0]];
+    [self.view setBackgroundColor:WeatherSettingBackgroundColor];
     
     [self showOrHideDoneBarButton];
  
@@ -66,14 +66,14 @@
     
     //Container view
     _containerView = [[UIView alloc]initWithFrame:CGRectMake( mainViewX, containViewY, mainViewWidth, mainViewHeight-mainViewX-200)];
-    [_containerView setBackgroundColor:[UIColor whiteColor]];
+    //[_containerView setBackgroundColor:[UIColor whiteColor]];
     
      _location = [[UILabel alloc]initWithFrame:CGRectMake(_containerView.bounds.origin.x, _containerView.bounds.origin.y+10, mainViewWidth/2, labelHeight)];
     // [_humidity setBackgroundColor:[UIColor blackColor]];
     [_location setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
     [_location setText:@"Location:"];
     [_location setTextAlignment:NSTextAlignmentRight];
-    [_location setTextColor:[UIColor blackColor]];
+    [_location setTextColor:[UIColor whiteColor]];
     [_containerView addSubview: _location];
     
     //location value textfield
@@ -82,8 +82,12 @@
     [_locationValue setDelegate:self];
     [_locationValue setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
     [_locationValue setTextAlignment:NSTextAlignmentLeft];
-    [_locationValue setTextColor:[UIColor blackColor]];
+    [_locationValue setTextColor:[UIColor whiteColor]];
     [_locationValue setTag:LOCATION_TEXTFIELD_TAG];
+     if (_existingSelectedData != nil) {
+         [_locationValue setText:[_existingSelectedData objectForKey:LOCATION_NAME]];
+        
+    }
     [_locationValue becomeFirstResponder];
    
     [_containerView addSubview: _locationValue];
@@ -94,7 +98,7 @@
     [_temperatureUnits setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
     [_temperatureUnits setText:@"Temperature Units:"];
     [_temperatureUnits setTextAlignment:NSTextAlignmentRight];
-    [_temperatureUnits setTextColor:[UIColor blackColor]];
+    [_temperatureUnits setTextColor:[UIColor whiteColor]];
     [_containerView addSubview: _temperatureUnits];
     
     
@@ -104,7 +108,7 @@
     [_temperatureUnitsValue setDelegate:self];
     [_temperatureUnitsValue setFont:[UIFont fontWithName:@"HelveticaNeue-Light" size:18]];
     [_temperatureUnitsValue setTextAlignment:NSTextAlignmentLeft];
-    [_temperatureUnitsValue setTextColor:[UIColor blackColor]];
+    [_temperatureUnitsValue setTextColor:[UIColor whiteColor]];
     [_temperatureUnitsValue setTag:UNITS_TEXTFIELD_TAG];
     
     UIToolbar *toolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 44)];
@@ -123,13 +127,29 @@
         [_unitsPickerView setDataSource:self];
         [_unitsPickerView setDelegate:self];
         //[_unitsPickerView setFrame:CGRectMake(0, screenWidth/2-40, screenWidth, (screenWidth/2)-20)];
-        NSLog(@"pickerFrame:%@",NSStringFromCGRect(_unitsPickerView.frame));
+        //NSLog(@"pickerFrame:%@",NSStringFromCGRect(_unitsPickerView.frame));
         [_temperatureUnitsValue setInputView:_unitsPickerView];
+        
         
     }
     [_containerView addSubview:_temperatureUnitsValue];
     
     _pickerViewData = [NSArray arrayWithObjects:@"None",@"Metric",@"Imperial", nil];
+    if (_existingSelectedData != nil) {
+        NSString *selectedUnit = [[_existingSelectedData objectForKey:UNITS] capitalizedString];
+        [_unitsPickerView selectRow:[_pickerViewData indexOfObject:selectedUnit] inComponent:0 animated:YES];
+        NSDictionary *attributeDict = nil;
+        UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
+        NSMutableParagraphStyle *style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        [style setAlignment:NSTextAlignmentLeft];
+        
+        attributeDict = @{NSUnderlineStyleAttributeName:@(NSUnderlineStyleNone),
+                          NSFontAttributeName:font,
+                          NSParagraphStyleAttributeName:style};
+        
+        [_temperatureUnitsValue setAttributedText:[[NSAttributedString alloc]initWithString:selectedUnit attributes:attributeDict]];
+         
+    }
 
     [self.view addSubview:_containerView];
     
@@ -137,7 +157,7 @@
 
 -(void)done:(id)sender
 {
-    PRINT_CONSOLE_LOG;
+    PRINT_CONSOLE_LOG(nil);
     [self dismissKeyboard];
     if ([_locationValue.text length] == 0 || [_temperatureUnitsValue.text length] == 0 || [_temperatureUnitsValue.text isEqualToString:@"None"]) {
         [self.delegate dissmissViewContorller:nil];
@@ -150,7 +170,7 @@
     [self.delegate dissmissViewContorller:_selectedData];
 }
 -(void)cancel:(id) sender{
-    PRINT_CONSOLE_LOG;
+    PRINT_CONSOLE_LOG(nil);
     [self dismissKeyboard];
 
     [self.delegate dissmissViewContorller:nil];
@@ -178,11 +198,11 @@
                 
             textField.layer.borderColor =  ([[UIColor redColor] CGColor]);
             textField.layer.borderWidth = 1.0;
-                NSLog(@"cannot be empty");
-                 // return NO;//weired
+            PRINT_CONSOLE_LOG(@"cannot be empty,location textfield")
+                  // return NO;//weired
              }
             else {
-                textField.layer.borderColor =  ([[UIColor whiteColor] CGColor]);
+                textField.layer.borderColor =  ([WeatherSettingBackgroundColor CGColor]);
                 textField.layer.borderWidth = 1.0;
                 [textField resignFirstResponder];
   
@@ -193,12 +213,12 @@
              if ([textField.text length ]== 0 || [_temperatureUnitsValue.text isEqualToString:@"None"]) {
             textField.layer.borderColor =  ([[UIColor redColor] CGColor]);
             textField.layer.borderWidth = 1.0;
-                 NSLog(@"cannot be empty");
+            PRINT_CONSOLE_LOG(@"cannot be empty,units textfield")
                   // return NO;
 
              }
              else {
-                 textField.layer.borderColor =  ([[UIColor whiteColor] CGColor]);
+                 textField.layer.borderColor =  ([WeatherSettingBackgroundColor CGColor]);
                  textField.layer.borderWidth = 1.0;
                  [textField resignFirstResponder];
              }
@@ -211,12 +231,10 @@ return YES;
 
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    NSLog(@"textFieldShouldReturn");
-    [textField resignFirstResponder];
+     [textField resignFirstResponder];
     return YES;
 }
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    NSLog(@"shouldChangeCharactersInRange:%@",string);
     [self showOrHideDoneBarButton];
 
     return YES;
@@ -252,9 +270,8 @@ return YES;
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    
-    NSLog(@"didSelectRow :%@",[_pickerViewData objectAtIndex:row]);
-    if (_selectedData) {
+    PRINT_CONSOLE_LOG([_pickerViewData objectAtIndex:row]);
+     if (_selectedData) {
        NSString *units  = [_pickerViewData objectAtIndex:row];
          NSDictionary *attributeDict = nil;
         UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
@@ -268,6 +285,8 @@ return YES;
          [_temperatureUnitsValue setAttributedText:[[NSAttributedString alloc]initWithString:units attributes:attributeDict]];
         
         [_selectedData setObject:units forKey:UNITS];
+        [[NSUserDefaults standardUserDefaults]setObject:units forKey:UNITS_PREFERENCE];
+        [[NSUserDefaults standardUserDefaults]synchronize];
         [self showOrHideDoneBarButton];
         
     }

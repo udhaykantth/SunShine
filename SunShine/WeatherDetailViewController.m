@@ -45,8 +45,7 @@
 #pragma mark --View methods
 
 - (void)viewDidLoad {
-    //NSLog(@"[%s]",__PRETTY_FUNCTION__);
-    [super viewDidLoad];
+     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.navigationItem setTitle:@"Day Weather Report"];
     [self.view setBackgroundColor:[UIColor colorWithRed:74.0/255 green:144.0/255 blue:226.0/255 alpha:1.0]];
@@ -58,8 +57,8 @@
     // Dispose of any resources that can be recreated.
 }
 -(void)configureView {
-    //NSLog(@"[%s]",__PRETTY_FUNCTION__);
-    //NSLog(@"detail data:%@",[_detailWeatherCondition description]);
+    
+     //NSLog(@"detail data:%@",[_detailWeatherCondition description]);
 
     if (self.detailWeatherCondition) {
         //update the user interface with weather in detail.
@@ -281,19 +280,6 @@
             [_degValue setTextAlignment:NSTextAlignmentLeft];
             [_degValue setTextColor:[UIColor whiteColor]];
             [_containerView addSubview: _degValue];
-            
-            
-            
-           // NSLog(@"_humidity:%@",NSStringFromCGRect(_humidity.frame));
-           // NSLog(@"_humidityValue:%@",NSStringFromCGRect(_humidityValue.frame));
-
-            
-            
-            
-            
-            
-            
-            
             [self.view addSubview: _containerView];
         
             

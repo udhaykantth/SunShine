@@ -26,7 +26,7 @@
     WeatherListViewController *listVC = [[WeatherListViewController alloc] init];
     
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:listVC];
-    PRINT_CONSOLE_LOG;
+    PRINT_CONSOLE_LOG(nil);
     
     //[self.navigationController.navigationBar setBarTintColor:[UIColor yellowColor]];
     /*
@@ -68,6 +68,11 @@
     self.window.rootViewController = self.navigationController;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    NSString *units = [[NSUserDefaults standardUserDefaults]objectForKey:UNITS_PREFERENCE];
+
+    if (units != nil) {
+        [[NSUserDefaults standardUserDefaults]removeObjectForKey:UNITS_PREFERENCE];
+    }
     return YES;
 }
 

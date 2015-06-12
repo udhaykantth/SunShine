@@ -9,10 +9,9 @@
 #import "WeatherClient.h"
 #import "WeatherJsonParser.h"
 #import "WeatherCondition.h"
+#import "WeatherShared.h"
 
-#define WeatherURL_TypeCurrent @"http://api.openweathermap.org/data/2.5/weather?lat=17.38&lon=78.47&units="
-#define  WeatherURL_TypeHourly @"http://api.openweathermap.org/data/2.5/forecast?lat=17.3700&lon=78.4800&units="
-#define WeatherURL_TypeDaily @"http://api.openweathermap.org/data/2.5/forecast/daily?lat=17.3700&lon=78.4800&units="
+
 
 
 @interface WeatherClient()
@@ -30,7 +29,7 @@
     }
     return self;
 }
-- (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate type:(WeatherConditionType)WeatherconditionType metrics:(NSString*)metric
+- (void)fetchJSONDataFromCoordinates:(CLLocationCoordinate2D)coordinate type:(WeatherConditionType)WeatherconditionType units:(NSString*)units
 {
     
     //TODO:// coordinates has to be dynamic
@@ -38,34 +37,35 @@
    
     
     NSURL *url;
-    NSString *units;
-    if ([metric length ] == 0) {
+    NSString *unit;
+    if ([units length ] == 0) {
       //default units is metric
-        units = @"metric";
+        unit = @"metric";
     }
     else
     {
-        units = [metric lowercaseString];
+        unit = [units lowercaseString];
     }
     switch (WeatherconditionType) {
         case WeatherConditionTypeCurrent:
-            url =  [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WeatherURL_TypeCurrent,units]];
+            url =  [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WeatherURL_TypeCurrent,unit]];
             
             break;
         case WeatherConditionTypeHourly:
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",WeatherURL_TypeHourly,units,@"&cnt=12"]];
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",WeatherURL_TypeHourly,unit,@"&cnt=12"]];
             
              break;
         case WeatherConditionTypeDaily:
-            url =  [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",WeatherURL_TypeDaily,units,@"&cnt=7"]];
+            url =  [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",WeatherURL_TypeDaily,unit,@"&cnt=7"]];
             
             break;
             
         default:
-            //as now default is same as WeatherConditionTypeCurrent
-            url =  [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WeatherURL_TypeCurrent,units]];
+            //as of now default is same as WeatherConditionTypeCurrent
+            url =  [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WeatherURL_TypeCurrent,unit]];
             break;
     }
+    PRINT_CONSOLE_LOG(url);
     
     NSURLSessionDataTask *dataTask = [self.session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         if (! error) {
