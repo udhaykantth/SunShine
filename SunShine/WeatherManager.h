@@ -11,6 +11,9 @@
 #import "WeatherClient.h"
 extern NSString * const weatherDataReceivedNotification;
 extern NSString * const weatherDataFetchFailedNotification;
+extern NSString * const weatherDataFetchWithCurrentLocationNotification;
+extern NSString * const  locationUpdatedNotification;
+extern NSString * const geocoderLocationNotification;
 
 /*!
  @class WeatherManager
@@ -57,6 +60,14 @@ extern NSString * const weatherDataFetchFailedNotification;
  @result invokes the weather client api to fetch the json data of type hourly weatehr condition from the server.
  */
 -(void)fetchHourlyWeatherCondition;
+/*!
+ @method latitudeLogitudeFromCity
+ @abstract cityName, takes converts city name into latitude and longitude of city.
+ @result converts city address into latitude and longitude.
+ */
+
+-(void)latitudeLogitudeFromCity:(NSString*)cityName;
+
 
 
 

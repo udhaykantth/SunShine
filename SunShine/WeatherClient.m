@@ -48,15 +48,15 @@
     }
     switch (WeatherconditionType) {
         case WeatherConditionTypeCurrent:
-            url =  [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",WeatherURL_TypeCurrent,unit]];
-            
+            url =  [NSURL URLWithString:[NSString stringWithFormat:@"%@%f&lon=%f&units=%@",WeatherURL_TypeCurrent,coordinate.latitude,coordinate.longitude,unit]];
+             
             break;
         case WeatherConditionTypeHourly:
-            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",WeatherURL_TypeHourly,unit,@"&cnt=12"]];
+            url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%f&lon=%f&units=%@%@",WeatherURL_TypeHourly,coordinate.latitude,coordinate.longitude, unit,@"&cnt=12"]];
             
              break;
         case WeatherConditionTypeDaily:
-            url =  [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@",WeatherURL_TypeDaily,unit,@"&cnt=7"]];
+            url =  [NSURL URLWithString:[NSString stringWithFormat:@"%@%f&lon=%f&units=%@%@",WeatherURL_TypeDaily,coordinate.latitude,coordinate.longitude, unit,@"&cnt=7"]];
             
             break;
             

@@ -55,8 +55,11 @@
     
 
     [self setRefreshControl:refresh];
-    [self fetchData];
-    [self configureHeaderView];
+    [[WeatherManager sharedWeatherManager] findMyLocation];
+
+         [self configureHeaderView];
+  
+
     
 
     
@@ -116,7 +119,7 @@
     
     static NSString *cellIndentifier = @"WeatherTableViewCell";
     WeatherTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIndentifier];
-    if (cell == nil) {
+    if (nil == cell) {
          cell = [[WeatherTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIndentifier];
     }
      ////leave blank for the first row as it is shown in header view
@@ -137,7 +140,7 @@
 - (void)configureHourlyRowCell:(WeatherTableViewCell *)cell weather:(WeatherCondition *)weather {
     //NSLog(@"[%s],weather data:%@",__PRETTY_FUNCTION__,[weather description]);
     
-    if (weather != nil) {
+    if (nil != weather) {
         [cell.dayLabel setText:weather.day];
         //NSLog(@"currentdate:%@",weather.day);
         [cell.temperatureStatusImageView setImage:[[WeatherUtility sharedWeatherUtility] weatherIconFromString:weather.icon]];
@@ -352,6 +355,14 @@
     });
 
 }
+-(void)locationUpdateReceived:(NSNotification*)notification {
+    [self fetchData];
+
+}
+-(void)geocoderLocationReceived:(NSNotification*)notification {
+    [self fetchData];
+    
+}
 #pragma mark - navigationController transition
 -(id<UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController animationControllerForOperation:(UINavigationControllerOperation)operation fromViewController:(UIViewController *)fromVC toViewController:(UIViewController *)toVC
 {
@@ -385,10 +396,17 @@
 -(void)addObservers {
     [[NSNotificationCenter defaultCenter ]addObserver:self selector:@selector(loadWeatherData:) name:weatherDataReceivedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fetchFailed:) name:weatherDataFetchFailedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(locationUpdateReceived:) name:locationUpdatedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(geocoderLocationReceived:) name:geocoderLocationNotification object:nil];
+    
+    
+    
 }
 -(void)removeObservers {
     [[NSNotificationCenter defaultCenter]removeObserver:self name:weatherDataReceivedNotification object:self];
     [[NSNotificationCenter defaultCenter]removeObserver:self name:weatherDataFetchFailedNotification object:self];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:locationUpdatedNotification object:self];
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:geocoderLocationNotification object:self];
 
 }
 #pragma mark --Custom methods
@@ -434,11 +452,11 @@
 }
 -(void)dissmissViewContorller:(NSMutableDictionary *)selectedData {
     PRINT_CONSOLE_LOG([selectedData description]);
-    if (selectedData != nil) {
+    if (nil != selectedData) {
          [[WeatherManager sharedWeatherManager] setMetric:[selectedData objectForKey:UNITS]];
         [[WeatherManager sharedWeatherManager] setCityName:[selectedData objectForKey:LOCATION_NAME]];
-        [self fetchData];
-
+        [[WeatherManager sharedWeatherManager]latitudeLogitudeFromCity:[[selectedData objectForKey:LOCATION_NAME] lowercaseString]];
+ 
         
     }
     [self dismissViewControllerAnimated:YES completion:nil];

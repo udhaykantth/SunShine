@@ -84,7 +84,7 @@
     [_locationValue setTextAlignment:NSTextAlignmentLeft];
     [_locationValue setTextColor:[UIColor whiteColor]];
     [_locationValue setTag:LOCATION_TEXTFIELD_TAG];
-     if (_existingSelectedData != nil) {
+     if (nil != _existingSelectedData ) {
          [_locationValue setText:[_existingSelectedData objectForKey:LOCATION_NAME]];
         
     }
@@ -120,7 +120,7 @@
     
     [_temperatureUnitsValue setInputAccessoryView:toolBar];
     
-    if (_unitsPickerView == nil) {
+    if (nil == _unitsPickerView) {
         //CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
         
         _unitsPickerView = [[UIPickerView alloc]init];
@@ -135,7 +135,7 @@
     [_containerView addSubview:_temperatureUnitsValue];
     
     _pickerViewData = [NSArray arrayWithObjects:@"None",@"Metric",@"Imperial", nil];
-    if (_existingSelectedData != nil) {
+    if (nil != _existingSelectedData) {
         NSString *selectedUnit = [[_existingSelectedData objectForKey:UNITS] capitalizedString];
         [_unitsPickerView selectRow:[_pickerViewData indexOfObject:selectedUnit] inComponent:0 animated:YES];
         NSDictionary *attributeDict = nil;
@@ -249,7 +249,7 @@ return YES;
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return (_pickerViewData != nil)?[_pickerViewData count]:0;
+    return (nil != _pickerViewData)?[_pickerViewData count]:0;
 }
 #pragma mark - UIPickerViewDelegate
 

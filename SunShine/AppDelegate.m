@@ -70,7 +70,7 @@
     [self.window makeKeyAndVisible];
     NSString *units = [[NSUserDefaults standardUserDefaults]objectForKey:UNITS_PREFERENCE];
 
-    if (units != nil) {
+    if (nil != units) {
         [[NSUserDefaults standardUserDefaults]removeObjectForKey:UNITS_PREFERENCE];
     }
     return YES;

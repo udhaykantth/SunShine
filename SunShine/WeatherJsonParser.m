@@ -39,7 +39,7 @@
 
 -(void)weatherDataFromJSON:(NSDictionary*)json {
 
-    if (json == nil) {
+    if (nil == json) {
         NSError *error;
         [self.delegate didFinishParsingWithError:&error];
      }
@@ -65,7 +65,7 @@
             if ([count intValue] > 7) {
                 
                 NSDictionary* main = [weatherDict objectForKey:@"main"];;
-                if (main != nil) {
+                if (nil != main) {
                     NSNumber* humidity = [main objectForKey:@"humidity"];
                     if (!(humidity < 0)) {
                         [weatherData setHumidity:humidity];
@@ -96,7 +96,7 @@
                 }
                 
                 NSDictionary* clouds = [weatherDict objectForKey:@"clouds"];
-                if (clouds != nil) {
+                if (nil != clouds) {
                     long all = [[clouds objectForKey:@"all"]longValue];
                     if (!(all < 0)) {
                         //all is not used , so ignored it.
@@ -104,7 +104,7 @@
                     
                 }
                 NSDictionary* wind = [weatherDict objectForKey:@"wind"];
-                if (wind != nil) {
+                if (nil != wind) {
                     double speed = [[wind objectForKey:@"speed"]doubleValue];
                     if (!(speed < 0)) {
                         [weatherData setWindSpeed:[NSNumber numberWithDouble:speed]];
@@ -116,7 +116,7 @@
                     
                 }
                 NSDictionary* rain = [weatherDict objectForKey:@"rain"];
-                if (rain!= nil) {
+                if (nil!= rain) {
                     //double rainReading= [[rain objectForKey:@"3h"]doubleValue];
                     // 3h is not used , so ignored it.
                     
@@ -149,7 +149,7 @@
                 }
                 
                 NSNumber* rain = [weatherDict objectForKey:@"rain"];
-                if (rain!= nil) {
+                if (nil!= rain) {
                     //double rainReading= [[rain objectForKey:@"3h"]doubleValue];
                     // 3h is not used , so ignored it.
                     
@@ -195,7 +195,7 @@
             }
             
             NSDictionary *cityDict = [json objectForKey:@"city"];
-            if (cityDict !=nil) {
+            if (nil !=cityDict) {
                 NSNumber* locationID = [cityDict objectForKey:@"id"];
                 if (!(locationID < 0)) {
                     [weatherData setLocationID:locationID];
@@ -211,7 +211,7 @@
                 
                 // NSString *population = [cityDict objectForKey:@"population"];//Unused field
                 NSDictionary* coordinates = [cityDict objectForKey:@"coord"];
-                if (coordinates != nil) {
+                if (nil != coordinates) {
                     double longitude = [[coordinates objectForKey:@"lon"] doubleValue];
                     double latitude = [[coordinates objectForKey:@"lat"]  doubleValue];
                     [weatherData setLocationCoordinate:LocationCoordinatesMake(latitude, longitude)];

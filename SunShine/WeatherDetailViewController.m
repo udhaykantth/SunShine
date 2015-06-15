@@ -62,7 +62,7 @@
 
     if (self.detailWeatherCondition) {
         //update the user interface with weather in detail.
-        if (_containerView == nil) {
+        if (nil == _containerView) {
             
             
             _containerView = [[UIView alloc]initWithFrame:CGRectMake(self.view.bounds.origin.x
