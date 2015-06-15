@@ -186,10 +186,10 @@ NSString * const geocoderLocationNotification =@"geocoderLocationNotification";
         if ([placemarks count] > 0)
         {
             CLPlacemark *placemark = [placemarks objectAtIndex:0];
-            CLLocation *location = placemark.location;
+            //CLLocation *location = placemark.location;
             self.currentLocation = placemark.location;
-            CLLocationCoordinate2D coordinate = location.coordinate;
-            NSLog(@"latitude: %f, longitude: %f,city:%@,name:%@,adminstrative area:%@,country:%@,address dictionary:%@,subAdministrativeArea:%@,sublocality:%@,subthoroughfare:%@,inlandwater:%@,thoroughfare :%@, ocean:%@, areasOfInterest:%@", coordinate.latitude, coordinate.longitude,placemark.locality,placemark.name,placemark.administrativeArea,placemark.country,placemark.addressDictionary,placemark.subAdministrativeArea,placemark.subLocality,placemark.subThoroughfare,placemark.inlandWater,placemark.thoroughfare,placemark.ocean,placemark.areasOfInterest);
+            //CLLocationCoordinate2D coordinate = location.coordinate;
+           // NSLog(@"latitude: %f, longitude: %f,city:%@,name:%@,adminstrative area:%@,country:%@,address dictionary:%@,subAdministrativeArea:%@,sublocality:%@,subthoroughfare:%@,inlandwater:%@,thoroughfare :%@, ocean:%@, areasOfInterest:%@", coordinate.latitude, coordinate.longitude,placemark.locality,placemark.name,placemark.administrativeArea,placemark.country,placemark.addressDictionary,placemark.subAdministrativeArea,placemark.subLocality,placemark.subThoroughfare,placemark.inlandWater,placemark.thoroughfare,placemark.ocean,placemark.areasOfInterest);
             [[NSNotificationCenter defaultCenter] postNotificationName:geocoderLocationNotification object:nil];
 
         }

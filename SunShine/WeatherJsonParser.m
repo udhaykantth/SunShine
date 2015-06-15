@@ -41,7 +41,7 @@
 
     if (nil == json) {
         NSError *error;
-        [self.delegate didFinishParsingWithError:&error];
+        [self.delegate didFinishParsingWithError:error];
      }
     //weather parsing for the daily or hourly
     NSMutableArray* weatherMutableArray = [NSMutableArray array];

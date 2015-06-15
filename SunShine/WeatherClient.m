@@ -97,7 +97,7 @@
     //NSLog(@"Parsing Done successfully");
     [self.clientDelegate didFinishFetchJSONDataFromWeatherURL:parsedData];
 }
--(void)didFinishParsingWithError:(NSError *__autoreleasing *)error {
+-(void)didFinishParsingWithError:(NSError *)error {
     [self.clientDelegate didFailFetchJSONDataFromWeatherURL];
 
 }

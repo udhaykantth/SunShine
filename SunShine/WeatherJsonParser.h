@@ -28,7 +28,7 @@
  @param error description.
  @result delegated by the weather client api, once json data parse failed.
  */
--(void)didFinishParsingWithError:(NSError**) error;
+-(void)didFinishParsingWithError:(NSError*) error;
 
 @end
 /*!
