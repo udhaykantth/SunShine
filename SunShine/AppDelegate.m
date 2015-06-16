@@ -27,45 +27,7 @@
     
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:listVC];
     PRINT_CONSOLE_LOG(nil);
-    
-    //[self.navigationController.navigationBar setBarTintColor:[UIColor yellowColor]];
-    /*
-     NSShadow *shadow = [[NSShadow alloc] init];
-    [shadow setShadowColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.8]];
-    [shadow setShadowOffset:CGSizeMake(0, 1)];
-    [self.navigationController.navigationBar setTitleTextAttributes: [NSDictionary dictionaryWithObjectsAndKeys:
-                                                           [UIColor colorWithRed:245.0/255.0 green:245.0/255.0 blue:245.0/255.0 alpha:1.0], NSForegroundColorAttributeName,
-                                                           shadow, NSShadowAttributeName,
-                                                           [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:21.0], NSFontAttributeName, nil]];
-     */
-    //[self.navigationController.navigationBar setTranslucent:YES];
-    //[[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@" "] forBarMetrics:UIBarMetricsDefault];
-    //self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@" "]];
-    
-    /* 
-     UIBarButtonItem *shareItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:nil];
-    UIBarButtonItem *cameraItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCamera target:self action:nil];
-    
-    NSArray *actionButtonItems = @[shareItem, cameraItem];
-    self.navigationController.navigationItem.rightBarButtonItems = actionButtonItems;
-     */
-    
-     
-
-//    var doneButtonAsLeftArrow = UIBarButtonItem(image: UIImage(named: "LeftArrow24x24.png"), style: .Plain, target: self, action: "doneButtonPushed")
-//    self.view.navigationItem?.setLeftBarButtonItem(doneButtonAsLeftArrow)
-    
-
-    
-   /*
-    UIBarButtonItem *settingItem = [[UIBarButtonItem alloc]initWithImage:[UIImage imageNamed:@"Settings-50.png"] style:UIBarButtonItemStylePlain target:self action:@selector(openSettingView)];
-    [self.navigationController.navigationItem setRightBarButtonItem:settingItem];
-  */
-
-
-
-
-    self.window.rootViewController = self.navigationController;
+        self.window.rootViewController = self.navigationController;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     NSString *units = [[NSUserDefaults standardUserDefaults]objectForKey:UNITS_PREFERENCE];
